@@ -52,3 +52,9 @@ def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
         end_index = min((batch_num + 1) * batch_size, data_size)
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
+
+def build_model_data(y, X_without_offset):
+    """Form (y,tX) to get regression data in matrix form."""
+    num_samples = len(y)
+    tx = np.c_[np.ones(num_samples), X_without_offset]
+    return y, tx
