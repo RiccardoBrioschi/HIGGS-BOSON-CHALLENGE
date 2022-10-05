@@ -3,5 +3,5 @@ This is a repo for the ML Project 1 for the course Machine Learning at EPFL (CS-
 
 # Team:
 Riccardo Brioschi: @RiccardoBrioschi  
-Gabriele D'Angeli:  
+Gabriele D'Angeli:  @GabrieleDAngeli
 Federico Di Gennaro: @FedericoDiGennaro  
