@@ -49,7 +49,7 @@ def compute_loss(y, tx, w):
         the value of the loss (a scalar), corresponding to the input parameters w.
     """
     err = y - tx.dot(w)
-    return np.sum(err**2) / (2*len/y)
+    return np.sum(err**2) / (2*len(y))
 
 def compute_stoch_gradient(y, tx, w):
 
