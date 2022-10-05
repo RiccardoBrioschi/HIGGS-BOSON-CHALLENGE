@@ -4,8 +4,7 @@ import numpy as np
 
 
 def load_data(path, default_missing_value = -999.0):
-    """Load data function.
-    
+    """Load data function. 
     Arguments:
     path : path to find the file
 
