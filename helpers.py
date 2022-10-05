@@ -22,10 +22,17 @@ def load_data(path, default_missing_value = -999.0):
 
 def standardize(data):
     """ 
-    This function standardizes the feature matrix by performing in place operations.
+    This function standardizes the feature matrix.
+    Returns:
+    std_data : standardize data
+    mean : mean of data
+    std : standard deviation of data.
     """
-    data-= data.mean(axis = 0)
-    data/= data.std(axis = 0)
+    mean = data.mean(axis = 0)
+    std_data = data - data.mean(axis = 0)
+    std = data.std(axis = 0)
+    std_data = data / data.std(axis = 0)
+    return std_data, mean, std
 
 
 def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
