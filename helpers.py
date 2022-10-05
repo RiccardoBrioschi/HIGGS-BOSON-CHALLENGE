@@ -3,49 +3,30 @@
 import numpy as np
 
 
-def load_data(sub_sample=True, add_outlier=False):
-    """Load data and convert it to the metric system."""
-    path_dataset = "height_weight_genders.csv"
-    data = np.genfromtxt(
-        path_dataset, delimiter=",", skip_header=1, usecols=[1, 2])
-    height = data[:, 0]
-    weight = data[:, 1]
-    gender = np.genfromtxt(
-        path_dataset, delimiter=",", skip_header=1, usecols=[0],
-        converters={0: lambda x: 0 if b"Male" in x else 1})
-    # Convert to metric system
-    height *= 0.025
-    weight *= 0.454
+def load_data(path, default_missing_value = -999.0):
+    """Load data function.
+    
+    Arguments:
+    path : path to find the file
 
-    # sub-sample
-    if sub_sample:
-        height = height[::50]
-        weight = weight[::50]
+    Returns
+    ids : numpy array containing ids of the observed data
+    tx : feature matrix
+    y : prediction converted according to the rule {'b': 1, 's': 0}
+    """
+    ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
+    tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
+    y = np.genfromtxt(path, skip_header = 1, delimiter = ',', usecols = 1, converters = {1: lambda x: 1 if x == b'b' else 0}, dtype = int)
+    # We now convert missing data to np.nan
+    tx[tx == default_missing_value] = np.nan
+    return ids,tx,y
 
-    if add_outlier:
-        # outlier experiment
-        height = np.concatenate([height, [1.1, 1.2]])
-        weight = np.concatenate([weight, [51.5/0.454, 55.3/0.454]])
-
-    return height, weight, gender
-
-
-def standardize(x):
-    """Standardize the original data set."""
-    mean_x = np.mean(x)
-    x = x - mean_x
-    std_x = np.std(x)
-    x = x / std_x
-    return x, mean_x, std_x
-
-
-def build_model_data(height, weight):
-    """Form (y,tX) to get regression data in matrix form."""
-    y = weight
-    x = height
-    num_samples = len(y)
-    tx = np.c_[np.ones(num_samples), x]
-    return y, tx
+def standardize(data):
+    """ 
+    This function standardizes the feature matrix by performing in place operations.
+    """
+    data-= data.mean(axis = 0)
+    data/= data.std(axis = 0)
 
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
