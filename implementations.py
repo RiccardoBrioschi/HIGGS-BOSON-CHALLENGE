@@ -94,8 +94,8 @@ def least_squares(y, tx):
     tx : shape = (N,D)
     Returns:
     w : the optimal model parameters as numpy arrays of shape (D,)"""
-    gram_matrix = tx.T.dot(tx)
-    return np.linalg.inv(gram_matrix).dot(tx.T).dot(y)
+    w = np.linalg.solve(tx.T.dot(tx),tx.T.dot(y))
+    return w
 
 def ridge_regression(y, tx, lambda_) :
     """implement ridge regression.
