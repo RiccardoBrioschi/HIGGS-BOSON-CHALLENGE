@@ -13,12 +13,13 @@ def load_data(path, default_missing_value = -999.0):
     tx : feature matrix
     y : prediction converted according to the rule {'b': 1, 's': 0}
     """
+    labels = np.genfromtxt(path, delimiter = ',', max_rows = 1, dtype = str, usecols = list(range(2,32)))
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
     y = np.genfromtxt(path, skip_header = 1, delimiter = ',', usecols = 1, converters = {1: lambda x: 1 if x == b'b' else 0}, dtype = int)
     # We now convert missing data to np.nan
     tx[tx == default_missing_value] = np.nan
-    return ids,tx,y
+    return y,tx,ids,labels
 
 def standardize(data):
     """ 
