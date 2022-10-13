@@ -18,7 +18,8 @@ def compute_gradient_linear_regression(y, tx, w):
     return - tx.T.dot(err) / len(y)
 
 def compute_gradient_logistic_regression(y,tx,w):
-     """Computes the gradient at w for logistic regression.
+
+    """Computes the gradient at w for logistic regression.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -26,10 +27,9 @@ def compute_gradient_logistic_regression(y,tx,w):
     Returns:
         An array of shape (D, ) (same shape as w), containing the gradient of the loss at w.
     """
-    
     N = len(y)
     err = sigmoid(tx.dot(w)) - y
-    return -tx.T.dot(err) / N
+    return tx.T.dot(err) / N
     
 def compute_loss_linear_regression(y, tx, w):
 
@@ -42,7 +42,8 @@ def compute_loss_linear_regression(y, tx, w):
         the value of the loss (a scalar), corresponding to the input parameters w.
     """
     err = y - tx.dot(w)
-    return np.sum(err**2) / (2*len(y))
+    #return np.sum(err**2) / (2*len(y))
+    return np.linalg.norm(err)**2 / (2*len(y))
 
 def compute_logloss_logistic_regression(y, tx, w):
     
@@ -55,7 +56,7 @@ def compute_logloss_logistic_regression(y, tx, w):
         the value of the loss (a scalar), corresponding to the input parameters w.
     """
     predict = sigmoid(tx.dot(w))
-    term = -y*np.log(predict) + (1-y)*np.log(1 - predict)
+    term = -y*np.log(predict) - (1-y)*np.log(1 - predict)
     return np.mean(term)
 
 def compute_stoch_gradient(y, tx, w):
@@ -144,7 +145,7 @@ def ridge_regression(y, tx, lambda_) :
     A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
     b = tx.T.dot(y)
     w = np.linalg.solve(A,b)
-    ridge_loss = compute_loss_linear_regression(y,tx,w) + lambda_*np.norm(w)**2
+    ridge_loss = compute_loss_linear_regression(y,tx,w) + lambda_*np.linalg.norm(w)**2
     return w, ridge_loss
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
@@ -160,15 +161,13 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         loss: the loss value (scalar) for the final iteration of the method
         w: the model parameters as numpy arrays of shape (D, )
         """
-    ws = [initial_w]
     w = initial_w
     losses = [compute_logloss_logistic_regression(y,tx,w)]
     for n in range(max_iters):
         grad = compute_gradient_logistic_regression(y,tx,w)
         w = w - gamma*grad
         losses.append(compute_logloss_logistic_regression(y,tx,w))
-        ws.append(w)
-    return ws,losses
+    return w, losses
 
 def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
     pass
