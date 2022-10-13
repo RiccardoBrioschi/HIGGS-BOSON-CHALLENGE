@@ -93,14 +93,29 @@ def least_squares(y, tx):
     y : shape = (N,)
     tx : shape = (N,D)
     Returns:
-    w : the optimal model parameters as numpy arrays of shape (D,)"""
-    
+    w : the optimal model parameters as numpy arrays of shape (D,)
+    loss: the loss value (scalar) for least squares"""
+        
     gram_matrix = tx.T.dot(tx)
     w = np.linalg.solve(gram_matrix, tx.T.dot(y))
     return w, compute_loss(y,tx,w)
 
 def ridge_regression(y, tx, lambda_) :
-    pass
+    """Implement ridge regression using normal equations.
+    
+    Args:
+        y: numpy array of shape (N,), N is the number of samples.
+        tx: numpy array of shape (N,D), D is the number of features.
+        lambda_: scalar.
+    
+    Returns:
+        w: optimal weights, numpy array of shape(D,), D is the number of features.
+        loss: the loss value (scalar) for ridge regression.
+    """
+    lambda_tilde =  2 * lambda_ * len(y)
+    A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
+    b = tx.T.dot(y)
+    return np.linalg.solve(A,b)
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     pass
