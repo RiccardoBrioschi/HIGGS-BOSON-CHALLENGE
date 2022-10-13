@@ -145,7 +145,7 @@ def ridge_regression(y, tx, lambda_) :
     A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
     b = tx.T.dot(y)
     w = np.linalg.solve(A,b)
-    ridge_loss = compute_loss_linear_regression(y,tx,w) + lambda_*np.linalg.norm(w)**2
+    ridge_loss = compute_loss_linear_regression(y,tx,w) 
     return w, ridge_loss
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
@@ -162,12 +162,13 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         w: the model parameters as numpy arrays of shape (D, )
         """
     w = initial_w
-    losses = [compute_logloss_logistic_regression(y,tx,w)]
+    #losses = [compute_logloss_logistic_regression(y,tx,w)]
     for n in range(max_iters):
         grad = compute_gradient_logistic_regression(y,tx,w)
         w = w - gamma*grad
-        losses.append(compute_logloss_logistic_regression(y,tx,w))
-    return w, losses
+        #losses.append(compute_logloss_logistic_regression(y,tx,w))
+        loss = compute_logloss_logistic_regression(y,tx,w)
+    return w, loss
 
 def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
     pass
