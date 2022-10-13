@@ -30,9 +30,9 @@ def standardize(data):
     std : standard deviation of data.
     """
     mean = data.mean(axis = 0)
-    std_data = data - data.mean(axis = 0)
+    std_data = data - mean
     std = data.std(axis = 0)
-    std_data = data / data.std(axis = 0)
+    std_data = std_data / std
     return std_data, mean, std
 
 
