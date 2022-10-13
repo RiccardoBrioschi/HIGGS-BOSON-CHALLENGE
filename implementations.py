@@ -1,5 +1,5 @@
 
-' Useful functions to use during the project '
+'Useful functions to use during the project '
 
 import numpy as np
 from helpers import batch_iter
@@ -46,9 +46,9 @@ def compute_stoch_gradient(y, tx, w):
         stoch_grad = -minibatch_tx.T.dot(err) / len(minibatch_y)
     return stoch_grad
 
-def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+def mean_squared_error_GD(y, tx, initial_w, max_iters, gamma):
 
-    """The Gradient Descent (GD) algorithm.
+    """The Gradient Descent (GD) algorithm for linear regression.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -65,11 +65,11 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         grad = compute_gradient(y,tx,w)
         w = w - grad*gamma
         loss = compute_gradient(y,tx,w)
-    return loss,w
+    return w,loss
 
-def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
+def mean_squared_error_SGD(y, tx, initial_w, max_iters, gamma):
 
-    """The Stochastic Gradient Descent algorithm (SGD).
+    """The Stochastic Gradient Descent algorithm (SGD) for linear regression.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -84,34 +84,23 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     for n in range(max_iters):
         stoch_grad = compute_stoch_gradient(y,tx,w)
         w = w - gamma*stoch_grad
-    return compute_loss(y,tx,w),w
+    return w,compute_loss(y,tx,w)
 
 def least_squares(y, tx):
     
-    """ THe least square algorithm.
+    """ The least square algorithm or linear regression using normal equations.
     Args:
     y : shape = (N,)
     tx : shape = (N,D)
     Returns:
     w : the optimal model parameters as numpy arrays of shape (D,)"""
-    w = np.linalg.solve(tx.T.dot(tx),tx.T.dot(y))
-    return w
+    
+    gram_matrix = tx.T.dot(tx)
+    w = np.linalg.solve(gram_matrix, tx.T.dot(y))
+    return w, compute_loss(y,tx,w)
 
 def ridge_regression(y, tx, lambda_) :
-    """implement ridge regression.
-    
-    Args:
-        y: numpy array of shape (N,), N is the number of samples.
-        tx: numpy array of shape (N,D), D is the number of features.
-        lambda_: scalar.
-    
-    Returns:
-        w: optimal weights, numpy array of shape(D,), D is the number of features.
-    """
-    lambda_tilde =  2 * lambda_ * len(y)
-    A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
-    b = tx.T.dot(y)
-    return np.linalg.solve(A,b)
+    pass
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     pass
