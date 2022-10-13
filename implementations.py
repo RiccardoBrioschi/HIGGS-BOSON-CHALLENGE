@@ -2,11 +2,11 @@
 'Useful functions to use during the project '
 
 import numpy as np
-from helpers import batch_iter
+from helpers import *
 
 def compute_gradient_linear_regression(y, tx, w):
 
-    """Computes the gradient at w.
+    """Computes the gradient at w for linear regression.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -15,11 +15,25 @@ def compute_gradient_linear_regression(y, tx, w):
         An array of shape (D, ) (same shape as w), containing the gradient of the loss at w.
     """
     err = y - tx.dot(w)
-    return - tx.t.dot(err) / len(y)
+    return - tx.T.dot(err) / len(y)
 
+def compute_gradient_logistic_regression(y,tx,w):
+     """Computes the gradient at w for logistic regression.
+    Args:
+        y: shape=(N, )
+        tx: shape=(N,D)
+        w: shape=(D, ). The vector of model parameters.
+    Returns:
+        An array of shape (D, ) (same shape as w), containing the gradient of the loss at w.
+    """
+    
+    N = len(y)
+    err = sigmoid(tx.dot(w)) - y
+    return -tx.T.dot(err) / N
+    
 def compute_loss_linear_regression(y, tx, w):
 
-    """Calculate the loss using either MSE or MAE.
+    """Calculate the loss using either MSE.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -29,6 +43,20 @@ def compute_loss_linear_regression(y, tx, w):
     """
     err = y - tx.dot(w)
     return np.sum(err**2) / (2*len(y))
+
+def compute_logloss_logistic_regression(y, tx, w):
+    
+    """Calculate the loss for logistic regression.
+    Args:
+        y: shape=(N, )
+        tx: shape=(N,D)
+        w: shape=(D,). The vector of model parameters.
+    Returns:
+        the value of the loss (a scalar), corresponding to the input parameters w.
+    """
+    predict = sigmoid(tx.dot(w))
+    term = -y*np.log(predict) + (1-y)*np.log(1 - predict)
+    return np.mean(term)
 
 def compute_stoch_gradient(y, tx, w):
 
@@ -60,7 +88,7 @@ def mean_squared_error_GD(y, tx, initial_w, max_iters, gamma):
         w: the model parameters as numpy arrays of shape (D, )
         """
     w = initial_w
-    loss = compute_loss(y,tx, w)
+    loss = compute_loss_linear_regression(y,tx, w)
     for n in range(max_iters):
         grad = compute_gradient_linear_regression(y,tx,w)
         w = w - grad*gamma
@@ -110,7 +138,7 @@ def ridge_regression(y, tx, lambda_) :
     
     Returns:
         w: optimal weights, numpy array of shape(D,), D is the number of features.
-        loss: the loss value (scalar) for ridge regression.
+        ridge_loss: the loss value (scalar) for ridge regression.
     """
     lambda_tilde =  2 * lambda_ * len(y)
     A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
@@ -120,7 +148,27 @@ def ridge_regression(y, tx, lambda_) :
     return w, ridge_loss
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
-    pass
+    
+    """The Gradient Descent (GD) algorithm for logistic regression.
+    Args:
+        y: shape=(N, )
+        tx: shape=(N,D)
+        initial_w: shape=(2, ). The initial guess (or the initialization) for the model parameters
+        max_iters: a scalar denoting the total number of iterations of GD
+        gamma: a scalar denoting the stepsize
+    Returns:
+        loss: the loss value (scalar) for the final iteration of the method
+        w: the model parameters as numpy arrays of shape (D, )
+        """
+    ws = [initial_w]
+    w = initial_w
+    losses = [compute_logloss_logistic_regression(y,tx,w)]
+    for n in range(max_iters):
+        grad = compute_gradient_logistic_regression(y,tx,w)
+        w = w - gamma*grad
+        losses.append(compute_logloss_logistic_regression(y,tx,w))
+        ws.append(w)
+    return ws,losses
 
 def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
     pass
