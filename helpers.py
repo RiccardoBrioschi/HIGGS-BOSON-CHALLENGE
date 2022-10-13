@@ -98,16 +98,14 @@ def predict(tx,w,ids,threshold):
     prediction = sigmoid(tx.dot(w))
     prediction[prediction >= threshold] = 1
     prediction[prediction <= threshold] = -1
-    return prediction
+    return prediction.astype(int)
 
-def create_csv_submission(ids, y_pred, name):
-    """
-    Creates an output file in csv format for submission to kaggle
-    Arguments: ids (event ids associated with each prediction)
-               y_pred (predicted class labels)
-               name (string name of .csv output file to be created)
-    """
-    final_result = np.c_[ids,y_pred]
-    final_result.tofile('output.csv',sep=',')
+def create_submission(ids,y_pred,name):
 
+    with open('output2.csv','w',newline ='') as file:
+        dw = csv.DictWriter(file,delimiter =',',fieldnames = name)
+        dw.writeheader()
+        for r1,r2 in zip(ids,y_pred):
+            dw.writerow({'Id':r1,'Prediction':r2})
+    
     
