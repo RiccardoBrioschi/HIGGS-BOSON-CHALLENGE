@@ -4,7 +4,7 @@
 import numpy as np
 from helpers import batch_iter
 
-def compute_gradient(y, tx, w):
+def compute_gradient_linear_regression(y, tx, w):
 
     """Computes the gradient at w.
     Args:
@@ -17,7 +17,7 @@ def compute_gradient(y, tx, w):
     err = y - tx.dot(w)
     return - tx.t.dot(err) / len(y)
 
-def compute_loss(y, tx, w):
+def compute_loss_linear_regression(y, tx, w):
 
     """Calculate the loss using either MSE or MAE.
     Args:
@@ -62,9 +62,9 @@ def mean_squared_error_GD(y, tx, initial_w, max_iters, gamma):
     w = initial_w
     loss = compute_loss(y,tx, w)
     for n in range(max_iters):
-        grad = compute_gradient(y,tx,w)
+        grad = compute_gradient_linear_regression(y,tx,w)
         w = w - grad*gamma
-        loss = compute_gradient(y,tx,w)
+        loss = compute_loss_linear_regression(y,tx,w)
     return w,loss
 
 def mean_squared_error_SGD(y, tx, initial_w, max_iters, gamma):
@@ -84,7 +84,7 @@ def mean_squared_error_SGD(y, tx, initial_w, max_iters, gamma):
     for n in range(max_iters):
         stoch_grad = compute_stoch_gradient(y,tx,w)
         w = w - gamma*stoch_grad
-    return w,compute_loss(y,tx,w)
+    return w,compute_loss_linear_regression(y,tx,w)
 
 def least_squares(y, tx):
     
@@ -98,7 +98,7 @@ def least_squares(y, tx):
         
     gram_matrix = tx.T.dot(tx)
     w = np.linalg.solve(gram_matrix, tx.T.dot(y))
-    return w, compute_loss(y,tx,w)
+    return w, compute_loss_linear_regression(y,tx,w)
 
 def ridge_regression(y, tx, lambda_) :
     """Implement ridge regression using normal equations.
@@ -115,7 +115,9 @@ def ridge_regression(y, tx, lambda_) :
     lambda_tilde =  2 * lambda_ * len(y)
     A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
     b = tx.T.dot(y)
-    return np.linalg.solve(A,b)
+    w = np.linalg.solve(A,b)
+    ridge_loss = compute_loss_linear_regression(y,tx,w) + lambda_*np.norm(w)**2
+    return w, ridge_loss
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     pass
