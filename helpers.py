@@ -88,7 +88,6 @@ def build_model_data(y, X_without_offset):
     return y, tx
 
 def sigmoid(x):
-
     """
     Compute sigmoid function for logistic regression
     """
@@ -108,12 +107,7 @@ def create_csv_submission(ids, y_pred, name):
                y_pred (predicted class labels)
                name (string name of .csv output file to be created)
     """
-    with open(name, 'w') as csvfile:
-        fieldnames = ['Id', 'Prediction']
-        writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames)
-        writer.writeheader()
-        for r1, r2 in zip(ids, y_pred):
-            writer.writerow({'Id':int(r1),'Prediction':int(r2)})
+    final_result = np.c_[ids,y_pred]
+    final_result.tofile('output.csv',sep=',')
 
-    
     
