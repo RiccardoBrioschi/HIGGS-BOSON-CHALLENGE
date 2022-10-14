@@ -125,8 +125,9 @@ def least_squares(y, tx):
     w : the optimal model parameters as numpy arrays of shape (D,)
     loss: the loss value (scalar) for least squares"""
         
-    gram_matrix = tx.T.dot(tx)
-    w = np.linalg.solve(gram_matrix, tx.T.dot(y))
+    gram_matrix = np.dot(tx.T,tx)
+    b = np.dot(tx.T,y)
+    w = np.linalg.solve(gram_matrix,b)
     return w, compute_loss_linear_regression(y,tx,w)
 
 def ridge_regression(y, tx, lambda_) :
@@ -171,6 +172,27 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
+
+    """The Gradient Descent (GD) algorithm for logistic regression.
+    Args:
+        y: shape=(N, )
+        tx: shape=(N,D)
+        initial_w: shape=(2, ). The initial guess (or the initialization) for the model parameters
+        max_iters: a scalar denoting the total number of iterations of GD
+        gamma: a scalar denoting the stepsize
+    Returns:
+        loss: the loss value (scalar) for the final iteration of the method
+        w: the model parameters as numpy arrays of shape (D, )
+        """
+    w = initial_w
+    N = len(y)
+    #losses = [compute_logloss_logistic_regression(y,tx,w)]
+    for n in range(max_iters):
+        grad = compute_gradient_logistic_regression(y,tx,w) + lambda_*w/ N
+        w = w - gamma*grad
+        #losses.append(compute_logloss_logistic_regression(y,tx,w))
+        loss = compute_logloss_logistic_regression(y,tx,w)
+    return w, loss
     pass
 
 

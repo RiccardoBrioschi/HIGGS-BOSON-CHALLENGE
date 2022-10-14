@@ -8,7 +8,7 @@ def fill_missing_values(tx,missing_value = -999):
     pass
 
 
-def load_train_data(path, default_missing_value = -999.0):
+def load_train_data(path,default_missing_value = -999):
     """Load data function. 
     Arguments:
     path : path to find the file
@@ -22,11 +22,10 @@ def load_train_data(path, default_missing_value = -999.0):
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
     y = np.genfromtxt(path, skip_header = 1, delimiter = ',', usecols = 1, converters = {1: lambda x: 1 if x == b'b' else 0}, dtype = int)
-    # We now convert missing data to np.nan
-    #tx[tx == default_missing_value] = np.nan
+    tx[tx == default_missing_value] = np.nan
     return y,tx,ids,columns_labels
 
-def load_test_data(path, default_missing_value = -999.0):
+def load_test_data(path, useful_columns,default_missing_value = -999.0):
     """Load data function. 
     Arguments:
     path : path to find the file
@@ -38,6 +37,7 @@ def load_test_data(path, default_missing_value = -999.0):
     """
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
+    tx = tx[:,useful_columns]
     # We now convert missing data to np.nan
     #tx[tx == default_missing_value] = np.nan
     return tx,ids
@@ -50,9 +50,9 @@ def standardize(data):
     mean : mean of data
     std : standard deviation of data.
     """
-    mean = data.mean(axis = 0)
+    mean = np.mean(data,axis = 0)
     std_data = data - mean
-    std = data.std(axis = 0)
+    std = np.std(std_data,axis = 0)
     std_data = std_data / std
     return std_data, mean, std
 
@@ -89,28 +89,25 @@ def build_model_data(y, X_without_offset):
 
 def sigmoid(x):
     """
-    Compute sigmoid function for logistic regression
+    Compute sigmoid function for logistic regression.
     """
     return 1/(1 + np.exp(-x))
 
-def predict(tx,w,ids,threshold):
+def predict(tx,w,threshold):
     """
-    COmpute predictions for logistic regresson model.
+    Prediction function for logistic regresson model.
     """
-    
     prediction = sigmoid(tx.dot(w))
     prediction[prediction >= threshold] = 1
-    prediction[prediction <= threshold] = -1
+    prediction[prediction < threshold] = -1
     return prediction.astype(int)
 
-def create_submission(ids,y_pred,name):
+def create_submission(ids,y_pred,name,file_name):
     """
-    Create a csv file to submit the final output to the challenge arena.
+    Create a csv file to submit the output to the challenge arena.
     """
-    with open('output2.csv','w',newline ='') as file:
+    with open(file_name,'w',newline ='') as file:
         dw = csv.DictWriter(file,delimiter =',',fieldnames = name)
         dw.writeheader()
         for r1,r2 in zip(ids,y_pred):
             dw.writerow({'Id':r1,'Prediction':r2})
-    
-    
