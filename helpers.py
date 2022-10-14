@@ -94,6 +94,9 @@ def sigmoid(x):
     return 1/(1 + np.exp(-x))
 
 def predict(tx,w,ids,threshold):
+    """
+    COmpute predictions for logistic regresson model.
+    """
     
     prediction = sigmoid(tx.dot(w))
     prediction[prediction >= threshold] = 1
@@ -101,7 +104,9 @@ def predict(tx,w,ids,threshold):
     return prediction.astype(int)
 
 def create_submission(ids,y_pred,name):
-
+    """
+    Create a csv file to submit the final output to the challenge arena.
+    """
     with open('output2.csv','w',newline ='') as file:
         dw = csv.DictWriter(file,delimiter =',',fieldnames = name)
         dw.writeheader()
