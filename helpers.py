@@ -4,9 +4,6 @@
 import numpy as np
 import csv
 
-def fill_missing_values(tx,missing_value = -999):
-    pass
-
 
 def load_train_data(path,default_missing_value = -999):
     """Load data function. 
@@ -21,11 +18,11 @@ def load_train_data(path,default_missing_value = -999):
     columns_labels = np.genfromtxt(path, delimiter = ',', max_rows = 1, dtype = str, usecols = list(range(2,32)))
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
-    y = np.genfromtxt(path, skip_header = 1, delimiter = ',', usecols = 1, converters = {1: lambda x: 1 if x == b'b' else 0}, dtype = int)
+    y = np.genfromtxt(path, skip_header = 1, delimiter = ',', usecols = 1, converters = {1: lambda x: 1 if x == b's' else 0}, dtype = int)
     tx[tx == default_missing_value] = np.nan
     return y,tx,ids,columns_labels
 
-def load_test_data(path, useful_columns,default_missing_value = -999.0):
+def load_test_data(path, useful_columns):
     """Load data function. 
     Arguments:
     path : path to find the file
@@ -38,8 +35,6 @@ def load_test_data(path, useful_columns,default_missing_value = -999.0):
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
     tx = tx[:,useful_columns]
-    # We now convert missing data to np.nan
-    #tx[tx == default_missing_value] = np.nan
     return tx,ids
 
 def standardize(data):
@@ -50,6 +45,8 @@ def standardize(data):
     mean : mean of data
     std : standard deviation of data.
     """
+    # The dataset has already been processed, so there are not nan values. Using np.nanmean or np.nanstd
+    # is therefore not necessary.
     mean = np.mean(data,axis = 0)
     std_data = data - mean
     std = np.std(std_data,axis = 0)
@@ -91,7 +88,7 @@ def sigmoid(x):
     """
     Compute sigmoid function for logistic regression.
     """
-    return 1/(1 + np.exp(-x))
+    return 1/(1+np.exp(-x))
 
 def predict(tx,w,threshold):
     """
