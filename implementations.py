@@ -1,7 +1,6 @@
 
 'Useful functions to use during the project '
 
-from errno import EEXIST
 import numpy as np
 from helpers import *
 from costs import *
