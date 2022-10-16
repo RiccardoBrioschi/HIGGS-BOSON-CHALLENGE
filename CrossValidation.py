@@ -1,6 +1,7 @@
 import numpy as np
 from implementations import reg_logistic_regression
 from costs import *
+from plots import cross_validation_visualization
 
 def build_k_indices(y, k_fold, seed):
     """build k indices for k-fold.
@@ -38,22 +39,19 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma, initial_w, max_iter
 
     Returns:
         train and test root mean square errors rmse = sqrt(2 mse)
-
-    >>> cross_validation(np.array([1.,2.,3.,4.]), np.array([6.,7.,8.,9.]), np.array([[3,2], [0,1]]), 1, 2, 3)
-    (0.019866645527597114, 0.33555914361295175)
     """
-    
-    ind1 = np.concatenate([k_indices[0:k,:].ravel(),k_indices[k+1:,:].ravel()])
-    
-    x_tr = x[ind1]
-    x_test = x[k_indices[k]]
-    
-    y_tr = y[ind1]
-    y_test = y[k_indices[k]]
- 
-    w, loss_tr = reg_logistic_regression(y_tr, x_tr, lambda_ ,initial_w, max_iters, gamma)
 
-    loss_te=compute_logloss_logistic_regression(y_test,x_test,w)
+    train_indices = np.concatenate([k_indices[:k].ravel(),k_indices[k+1:].ravel()])
+    test_indices = k_indices[k]
+    x_test = x[test_indices]
+    y_test = y[test_indices]
+    x_train = x[train_indices]
+    y_train = y[train_indices]
+
+    w_opt,_ = reg_logistic_regression(y_train,x_train,lambda_,initial_w,max_iters,gamma)
+
+    loss_tr = np.sqrt(2*compute_logloss_logistic_regression(y_train,x_train,w_opt))
+    loss_te = np.sqrt(2*compute_logloss_logistic_regression(y_test,x_test,w_opt))
 
     return loss_tr, loss_te
 
@@ -72,6 +70,7 @@ def cross_validation_demo(y, x, k_fold, lambdas, gamma, initial_w, max_iters):
     """
     
     seed = 12
+    w = initial_w
     k_fold = k_fold
     lambdas = lambdas
     # split data in k fold
@@ -79,24 +78,18 @@ def cross_validation_demo(y, x, k_fold, lambdas, gamma, initial_w, max_iters):
     # define lists to store the loss of training data and test data
     rmse_tr = []
     rmse_te = []
-    # ***************************************************
     for lambda_ in lambdas:
-        l_tr = 0
-        l_te = 0       
-        for n in range(k_fold):
-            loss_tr, loss_te = cross_validation_log(y, x, k_indices, n, lambda_, gamma, initial_w, max_iters)
-            l_tr += loss_tr
-            l_te += loss_te
-        l_tr = l_tr/k_fold
-        l_te = l_te/k_fold
-        rmse_tr.append(np.sqrt(2*l_tr))
-        rmse_te.append(np.sqrt(2*l_te))
-        
-    # ***************************************************    
-
+        temp_te, temp_tr = 0,0
+        for k in range(k_fold):
+            errors = cross_validation_log(y, x, k_indices, k,lambda_,gamma,w,max_iters)
+            temp_tr+= errors[0]
+            temp_te+= errors[1]
+        rmse_tr.append(temp_tr/k_fold)
+        rmse_te.append(temp_te/k_fold)
     best_rmse = min(rmse_te)
-    best_lambda=lambdas[rmse_te.index(best_rmse)]
-    
+    best_lambda = lambdas[rmse_te.index(best_rmse)]
+
+    cross_validation_visualization(lambdas, rmse_tr, rmse_te)
     return best_lambda, best_rmse
 
 

@@ -35,7 +35,7 @@ def managing_missing_values(X):
     return X
 
 
-def reject_outliers(tx_train, m):
+def reject_outliers(y,tx_train,m):
 
     A=np.array([abs(tx_train[:,0] - np.mean(tx_train[:,0])) < m * np.std(tx_train[:,0])])
     
@@ -47,8 +47,8 @@ def reject_outliers(tx_train, m):
 
     mask = np.sum(A,axis=1)>15
     tx=tx_train[mask , :]
-
-    return tx
+    y = y[mask]
+    return y,tx
 
 
 
