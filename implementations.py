@@ -1,6 +1,7 @@
 
 'Useful functions to use during the project '
 
+from errno import EEXIST
 import numpy as np
 from helpers import *
 from costs import *
@@ -119,7 +120,7 @@ def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
     for n in range(max_iters):
         grad = compute_gradient_logistic_regression(y,tx,w) + lambda_*w/ N
         w = w - gamma*grad
-    loss = compute_logloss_logistic_regression(y,tx,w)
+    loss = compute_logloss_logistic_regression(y,tx,w) + (lambda_/(2*N))*np.sum(w**2)
     return w, loss
 
 

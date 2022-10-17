@@ -22,7 +22,7 @@ def load_train_data(path,default_missing_value = -999):
     tx[tx == default_missing_value] = np.nan
     return y,tx,ids,columns_labels
 
-def load_test_data(path, useful_columns):
+def load_test_data(path,missing_values = -999.0):
     """Load data function. 
     Arguments:
     path : path to find the file
@@ -34,24 +34,9 @@ def load_test_data(path, useful_columns):
     """
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
-    tx = tx[:,useful_columns]
+    tx[tx == missing_values]=np.nan
     return tx,ids
 
-def standardize(data):
-    """ 
-    This function standardizes the feature matrix.
-    Returns:
-    std_data : standardize data
-    mean : mean of data
-    std : standard deviation of data.
-    """
-    # The dataset has already been processed, so there are not nan values. Using np.nanmean or np.nanstd
-    # is therefore not necessary.
-    mean = np.mean(data,axis = 0)
-    std_data = data - mean
-    std = np.std(std_data,axis = 0)
-    std_data = std_data / std
-    return std_data, mean, std
 
 def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
     """

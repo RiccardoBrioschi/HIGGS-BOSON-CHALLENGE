@@ -29,4 +29,4 @@ def compute_logloss_logistic_regression(y, tx, w):
     """
     predict = sigmoid(tx.dot(w))
     term = -y*np.log(predict) - (1-y)*np.log(1 - predict)
-    return np.sum(term) / len(y)
+    return np.mean(term)

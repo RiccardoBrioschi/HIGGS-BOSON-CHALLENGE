@@ -50,8 +50,8 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma, initial_w, max_iter
 
     w_opt,_ = reg_logistic_regression(y_train,x_train,lambda_,initial_w,max_iters,gamma)
 
-    loss_tr = np.sqrt(2*compute_logloss_logistic_regression(y_train,x_train,w_opt))
-    loss_te = np.sqrt(2*compute_logloss_logistic_regression(y_test,x_test,w_opt))
+    loss_tr = compute_logloss_logistic_regression(y_train,x_train,w_opt)
+    loss_te = compute_logloss_logistic_regression(y_test,x_test,w_opt)
 
     return loss_tr, loss_te
 
@@ -69,27 +69,27 @@ def cross_validation_demo(y, x, k_fold, lambdas, gamma, initial_w, max_iters):
         best_rmse : scalar, the associated root mean squared error for the best lambda
     """
     
-    seed = 12
+    seed = 10
     w = initial_w
     k_fold = k_fold
     lambdas = lambdas
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
     # define lists to store the loss of training data and test data
-    rmse_tr = []
-    rmse_te = []
+    loss_tr = []
+    loss_te = []
     for lambda_ in lambdas:
         temp_te, temp_tr = 0,0
         for k in range(k_fold):
-            errors = cross_validation_log(y, x, k_indices, k,lambda_,gamma,w,max_iters)
+            errors = cross_validation_log(y, x, k_indices, k, lambda_, gamma, w, max_iters)
             temp_tr+= errors[0]
             temp_te+= errors[1]
-        rmse_tr.append(temp_tr/k_fold)
-        rmse_te.append(temp_te/k_fold)
-    best_rmse = min(rmse_te)
-    best_lambda = lambdas[rmse_te.index(best_rmse)]
+        loss_tr.append(temp_tr/k_fold)
+        loss_te.append(temp_te/k_fold)
+    best_loss = min(loss_te)
+    best_lambda = lambdas[loss_te.index(best_loss)]
 
-    cross_validation_visualization(lambdas, rmse_tr, rmse_te)
-    return best_lambda, best_rmse
+    cross_validation_visualization(lambdas, loss_tr, loss_te)
+    return best_lambda, best_loss
 
 
