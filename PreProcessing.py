@@ -28,11 +28,17 @@ def PCA(X):
 
 def managing_missing_values(tx):
     """
-    change the np.nan with the median of the columns
+    Filling np.nan with the median of the columns
+    Arguments:
+    Input:
+    tx: matrix having missing values
+
+    Output:
+    tx: matrix after first processing
     """
     nan_per_columns = np.sum(np.isnan(tx),axis = 0)
 
-    tx=tx[:,nan_per_columns <= 0.5*tx.shape[0]]  #drop delle features con nan oltre 50%
+    tx=tx[:,nan_per_columns <= 0.5*tx.shape[0]]  # drop features if less than 50% of rows have missing values
 
     for col in range(tx.shape[1]):
         median = np.nanmedian(tx[:,col])
@@ -44,15 +50,15 @@ def managing_missing_values(tx):
 
 def reject_outliers(y,tx_train,m):
 
-    A=np.array([abs(tx_train[:,0] - np.mean(tx_train[:,0])) < m * np.std(tx_train[:,0])])
+    result=np.array([abs(tx_train[:,0] - np.mean(tx_train[:,0])) < m * np.std(tx_train[:,0])])
     
     for i in range(1,tx_train.shape[1]):
-        a=np.array([abs(tx_train[:,i] - np.mean(tx_train[:,i])) < m * np.std(tx_train[:,i])])
-        A = np.vstack((A,a))
+        col_i=np.array([abs(tx_train[:,i] - np.mean(tx_train[:,i])) < m * np.std(tx_train[:,i])])
+        result= np.vstack((result,col_i))
         
-    A=A.T
+    result = result.T
 
-    mask = np.sum(A,axis=1)>15
+    mask = np.sum(result,axis=1)>15
     tx=tx_train[mask , :]
     y = y[mask]
     return y,tx
