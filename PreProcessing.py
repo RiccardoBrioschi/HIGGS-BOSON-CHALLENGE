@@ -24,7 +24,7 @@ def PCA(X):
         principal_components = np.take(e_vectors, np.arange(D), axis=0)
 
 
-        return np.matmul(X, principal_components.T)
+        return e_values, principal_components, np.matmul(X, principal_components.T)
 
 def managing_missing_values(tx):
     """
