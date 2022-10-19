@@ -2,6 +2,7 @@ import numpy as np
 from implementations import *
 from costs import *
 from plots import cross_validation_visualization
+from preprocessing import *
 
 def build_k_indices_log(y, k_fold, seed):
     """build k indices for k-fold.
@@ -117,7 +118,7 @@ def build_k_indices_r(y, k_fold, seed):
     return np.array(k_indices)
 
 
-def cross_validation_r(y, x, k_indices, k, lambda_):
+def cross_validation_r(y, x, k_indices, k, lambda_, degree):
     """return the loss of ridge regression for a fold corresponding to k_indices
     
     Args:
@@ -142,10 +143,25 @@ def cross_validation_r(y, x, k_indices, k, lambda_):
     y_train = y[train_indices]
     y_test = y[test_indices]
 
-    w_opt,_ = ridge_regression(y_train,x_train, lambda_)
+    x_train_temp = x_train[:,1:-4]
+    x_test_temp = x_test[:, 1:-4]
 
-    mse_test = compute_loss_linear_regression(y_train,x_train, w_opt)
-    mse_train = compute_loss_linear_regression(y_test,x_test, w_opt)
+    phi = build_poly(x_train_temp, degree)
+    phi2 = build_poly(x_test_temp, degree)
+    
+    #aggiungo offset
+
+    _, phi = build_model_data(y_train, phi)
+    _, phi2 = build_model_data(y_test, phi2)
+
+    #aggiungo categoriche
+    phi=np.hstack((phi,x_train[:,:-4]))
+    phi2=np.hstack((phi2,x_test[:,:-4]))
+
+    w_opt, _ = ridge_regression(y_train, phi, lambda_)
+
+    mse_test = compute_loss_linear_regression(y_train,phi, w_opt)
+    mse_train = compute_loss_linear_regression(y_test,phi2, w_opt)
     loss_tr = np.sqrt(2*mse_train)
     loss_te = np.sqrt(2*mse_test)
 
@@ -153,7 +169,7 @@ def cross_validation_r(y, x, k_indices, k, lambda_):
 
 
 
-def cross_validation_demo_r(y, tx, k_fold, lambdas):
+def cross_validation_demo_r(y, tx, k_fold, lambdas, degree):
     """cross validation over regularisation parameter lambda.
     
     Args:
@@ -177,7 +193,7 @@ def cross_validation_demo_r(y, tx, k_fold, lambdas):
         l_tr = 0
         l_te = 0       
         for k in range(k_fold):
-            loss_tr, loss_te = cross_validation_r(y, tx, k_indices, k, j)
+            loss_tr, loss_te = cross_validation_r(y, tx, k_indices, k, j, degree)
             l_tr += loss_tr
             l_te += loss_te
         l_tr = l_tr/k_fold
