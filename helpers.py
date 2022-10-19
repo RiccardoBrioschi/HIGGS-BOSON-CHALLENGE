@@ -115,3 +115,20 @@ def create_submission(ids,y_pred,name,file_name):
         dw.writeheader()
         for r1,r2 in zip(ids,y_pred):
             dw.writerow({'Id':r1,'Prediction':r2})
+
+
+def divide_dataset(X,y,perc):
+
+    sample_indices = np.random.permutation(len(y))[:np.floor(perc*len(y)).astype(int)]
+    tx_perc = np.delete(X,sample_indices,axis=0)
+    y_perc = np.delete(y,sample_indices)
+    tx_not_perc = X[sample_indices,:]
+    y_not_perc = y[sample_indices]
+
+
+    return tx_perc, tx_not_perc, y_perc, y_not_perc
+
+def calcolo_accuracy(prediction, y_test):
+    a=np.sum(prediction == y_test)
+    accuracy=(len(y_test)-a)/len(y_test)
+    return accuracy

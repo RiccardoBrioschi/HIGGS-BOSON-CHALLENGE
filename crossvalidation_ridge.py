@@ -5,7 +5,7 @@ from plots import *
 from helpers import *
 
 
-def build_k_indices(y, k_fold, seed):
+def build_k_indices_r(y, k_fold, seed):
     """build k indices for k-fold.
     
     Args:
@@ -28,7 +28,7 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 
-def cross_validation(y, x, k_indices, k, lambda_, degree):
+def cross_validation_r(y, x, k_indices, k, lambda_, degree):
     """return the loss of ridge regression for a fold corresponding to k_indices
     
     Args:
@@ -70,7 +70,7 @@ def cross_validation(y, x, k_indices, k, lambda_, degree):
 
 
 
-def cross_validation_demo(y, tx, degree, k_fold, lambdas):
+def cross_validation_demo_r(y, tx, degree, k_fold, lambdas):
     """cross validation over regularisation parameter lambda.
     
     Args:
@@ -87,7 +87,7 @@ def cross_validation_demo(y, tx, degree, k_fold, lambdas):
     k_fold = k_fold
     lambdas = lambdas
     # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
+    k_indices = build_k_indices_r(y, k_fold, seed)
     # define lists to store the loss of training data and test data
     rmse_tr = []
     rmse_te = []
@@ -96,7 +96,7 @@ def cross_validation_demo(y, tx, degree, k_fold, lambdas):
         l_tr = 0
         l_te = 0       
         for k in range(k_fold):
-            loss_tr, loss_te = cross_validation(y, tx, k_indices, k, j, degree)
+            loss_tr, loss_te = cross_validation_r(y, tx, k_indices, k, j, degree)
             l_tr += loss_tr
             l_te += loss_te
         l_tr = l_tr/k_fold
@@ -134,7 +134,7 @@ def best_degree_selection(y, tx, degrees, k_fold, lambdas, seed = 1):
     """
     
     # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
+    k_indices = build_k_indices_r(y, k_fold, seed)
     
     # ***************************************************
     # INSERT YOUR CODE HERE
@@ -148,7 +148,7 @@ def best_degree_selection(y, tx, degrees, k_fold, lambdas, seed = 1):
             l_tr = 0
             l_te = 0 
             for k in range(k_fold):
-                loss_tr, loss_te = cross_validation(y, tx, k_indices, k, j, d)
+                loss_tr, loss_te = cross_validation_r(y, tx, k_indices, k, j, d)
                 l_tr += loss_tr
                 l_te += loss_te
             l_tr = l_tr/k_fold
