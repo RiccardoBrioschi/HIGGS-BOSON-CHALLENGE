@@ -38,7 +38,8 @@ def managing_missing_values(tx,threshold=0.5):
     """
     nan_per_columns = np.sum(np.isnan(tx),axis = 0)
 
-    tx=tx[:,nan_per_columns <= threshold*tx.shape[0]]  # drop features if less than 50% of rows have missing values
+    # Drop features if less than 50% of rows have missing values
+    tx=tx[:,nan_per_columns <= threshold*tx.shape[0]]  
 
     for col in range(tx.shape[1]):
         median = np.nanmedian(tx[:,col])

@@ -95,7 +95,7 @@ def sigmoid(x):
     """
     Compute sigmoid function for logistic regression.
     """
-    return 1/(1+np.exp(-x))
+    return 1.0/(1+np.exp(-x))
 
 def predict(tx,w,threshold):
     """
@@ -116,17 +116,19 @@ def create_submission(ids,y_pred,name,file_name):
         for r1,r2 in zip(ids,y_pred):
             dw.writerow({'Id':r1,'Prediction':r2})
 
+def divide_dataset(tx,y,perc):
+    """
+    perc: percentuale di train
+    """
 
-def divide_dataset(X,y,perc):
-
-    sample_indices = np.random.permutation(len(y))[:np.floor(perc*len(y)).astype(int)]
-    tx_perc = np.delete(X,sample_indices,axis=0)
-    y_perc = np.delete(y,sample_indices)
-    tx_not_perc = X[sample_indices,:]
-    y_not_perc = y[sample_indices]
-
-
-    return tx_perc, tx_not_perc, y_perc, y_not_perc
+    N = int(np.floor(perc*len(y)))
+    indices = np.random.permutation(len(y))
+    tx_train = tx[indices[:N]]
+    tx_test = tx[indices[N:]]
+    y_train = y[indices[:N]]
+    y_test = y[indices[N:]]
+            
+    return tx_train,tx_test,y_train,y_test
 
 def calcolo_accuracy(prediction, y_test):
     a=np.sum(prediction == y_test)
