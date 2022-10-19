@@ -113,3 +113,23 @@ def standardize(data):
     return data, mean, std
 
 
+def divide_dataset(tx,y,perc):
+    """
+    perc: percentuale di train
+    """
+
+    N = int(np.floor(perc*len(y)))
+    indices = np.random.permutation(len(y))
+    tx_train = tx[indices[:N]]
+    tx_test = tx[indices[N:]]
+    y_train = y[indices[:N]]
+    y_test = y[indices[N:]]
+            
+    return tx_train,tx_test,y_train,y_test
+
+
+def build_model_data(y, X_without_offset):
+    """Form (y,tX) to get regression data in matrix form."""
+    num_samples = len(y)
+    tx = np.c_[np.ones(num_samples), X_without_offset]
+    return y, tx

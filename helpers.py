@@ -85,11 +85,7 @@ def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
-def build_model_data(y, X_without_offset):
-    """Form (y,tX) to get regression data in matrix form."""
-    num_samples = len(y)
-    tx = np.c_[np.ones(num_samples), X_without_offset]
-    return y, tx
+
 
 def sigmoid(x):
     """
@@ -116,19 +112,6 @@ def create_submission(ids,y_pred,name,file_name):
         for r1,r2 in zip(ids,y_pred):
             dw.writerow({'Id':r1,'Prediction':r2})
 
-def divide_dataset(tx,y,perc):
-    """
-    perc: percentuale di train
-    """
-
-    N = int(np.floor(perc*len(y)))
-    indices = np.random.permutation(len(y))
-    tx_train = tx[indices[:N]]
-    tx_test = tx[indices[N:]]
-    y_train = y[indices[:N]]
-    y_test = y[indices[N:]]
-            
-    return tx_train,tx_test,y_train,y_test
 
 def calcolo_accuracy(prediction, y_test):
     a=np.sum(prediction == y_test)
