@@ -144,7 +144,7 @@ def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = '
         
         if method == 'logistic':
         
-            w_opt,_ = reg_logistic_regression(y_train,phi_train,0.0001,np.zeros(phi_train.shape[1]),300,0.3)
+            w_opt,_ = reg_logistic_regression(y_train,phi_train,lambda_,np.zeros(phi_train.shape[1]),300,0.3)
             pred_train = sigmoid(phi_train,w_opt)
             pred_test = sigmoid(phi_test,w_opt)
             pred_train[pred_train >= pred_threshold] = 1
@@ -153,6 +153,8 @@ def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = '
             pred_test[pred_test < pred_threshold] = 0
             
         elif method == 'linear':
+            
+            w_opt,_ = ridge_regression(y_train,phi_train,lambda_)
             pred_train = phi_train.dot(w_opt)
             pred_train[pred_train>=pred_threshold]=1
             pred_train[pred_train<pred_threshold]=0

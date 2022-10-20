@@ -5,7 +5,8 @@ from plots import cross_validation_visualization
 from preprocessing import *
 
 def build_k_indices(y, k_fold, seed):
-    """build k indices for k-fold.
+    """
+    Build k indices for k-fold.
     
     Args:
         y:      shape=(N,)
@@ -73,7 +74,6 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters):
     return loss_tr, loss_te
 
 
-
 def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,seed = 10):
     """
     Cross validation over regularisation parameter lambda.
@@ -118,7 +118,6 @@ def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,s
     
     print("The choice of lambda which leads to the best test rmse is %.5f with a test rmse of %.3f. The best degree is %.1f" % (best_lambda, best_rmse,best_degree))
     return best_degree, best_lambda, best_rmse
-
 
 
 def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
