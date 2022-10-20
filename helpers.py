@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-"""some helper functions."""
+"""Some helper functions."""
 
 import numpy as np
 import csv
+from preprocessing import *
+from implementations import *
 
 def build_poly(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree.
+    """
+    Polynomial basis functions for input data x, for j=0 up to j=degree.
     
     Args:
         x: numpy array of shape (N,), N is the number of samples.
@@ -13,22 +16,17 @@ def build_poly(x, degree):
         
     Returns:
         poly: numpy array of shape (N,d+1)
-        
-    >>> build_poly(np.array([0.0, 1.5]), 2)
-    array([[1.  , 0.  , 0.  ],
-           [1.  , 1.5 , 2.25]])
-    """    
-    # ***************************************************
+    """
     
     phi=np.ones((len(x),1))
     for i in range(1,degree+1):
         phi=np.c_[phi,x**i]
         
-    # ***************************************************
     return phi
 
 def load_train_data(path,default_missing_value = -999):
-    """Load data function. 
+    """
+    Load data function. 
     Arguments:
     path : path to find the file
 
@@ -45,7 +43,8 @@ def load_train_data(path,default_missing_value = -999):
     return y,tx,ids,columns_labels
 
 def load_test_data(path,missing_values = -999.0):
-    """Load data function. 
+    """
+    Load data function. 
     Arguments:
     path : path to find the file
 
@@ -85,8 +84,6 @@ def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
-
-
 def sigmoid(x):
     """
     Compute sigmoid function for logistic regression.
@@ -102,6 +99,75 @@ def predict(tx,w,threshold):
     prediction[prediction < threshold] = -1
     return prediction.astype(int)
 
+def divide_dataset(tx,y,ratio,seed):
+    """
+    Divide the dataset into two parts.
+    Arguments
+    ratio: ratio of training data
+    
+    Returns:
+    tx_train,tx_test,y_train,y_test: train and test data to use
+    """
+    np.random.seed(seed)
+    N = int(np.floor(ratio*len(y)))
+    indices = np.random.permutation(len(y))
+    tx_train = tx[indices[:N]]
+    tx_test = tx[indices[N:]]
+    y_train = y[indices[:N]]
+    y_test = y[indices[N:]]
+            
+    return tx_train,tx_test,y_train,y_test
+
+def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = 'linear'):
+    """ 
+    Helper function to compute test and train accuracy of the class model
+    """
+    seeds = list(range(2,11))
+    test_accuracy = np.zeros(len(seeds))
+    train_accuracy = np.zeros(len(seeds))
+    
+    for idx,seed in enumerate(seeds):
+        x_train,x_test,y_train,y_test = divide_dataset(tx,y,divide_threshold,seed)
+        
+        x_train_temp = x_train[:,:-4]
+        x_test_temp = x_test[:,:-4]
+        
+        # We compute polynomial expansion and add offset
+        
+        phi_train = build_poly(x_train_temp, deg)
+        phi_test = build_poly(x_test_temp, deg)
+    
+        # Add again categorical variables
+        
+        phi_train=np.hstack((phi_train,x_train[:,-4:]))
+        phi_test=np.hstack((phi_test,x_test[:,-4:]))
+        
+        if method == 'logistic':
+        
+            w_opt,_ = reg_logistic_regression(y_train,phi_train,0.0001,np.zeros(phi_train.shape[1]),300,0.3)
+            pred_train = sigmoid(phi_train,w_opt)
+            pred_test = sigmoid(phi_test,w_opt)
+            pred_train[pred_train >= pred_threshold] = 1
+            pred_train[pred_train < pred_threshold] = 0
+            pred_test[pred_test >= pred_threshold] = 1
+            pred_test[pred_test < pred_threshold] = 0
+            
+        elif method == 'linear':
+            pred_train = phi_train.dot(w_opt)
+            pred_train[pred_train>=pred_threshold]=1
+            pred_train[pred_train<pred_threshold]=0
+            pred_test = phi_test.dot(w_opt)
+            pred_test[pred_test>=pred_threshold]=1
+            pred_test[pred_test<pred_threshold]=0
+           
+        train_accuracy[idx] = np.sum(pred_train == y_train)/len(y_train)
+        test_accuracy[idx] = np.sum(pred_test == y_test)/len(y_test)
+
+    print('Average train accuracy: {}'.format(np.mean(train_accuracy)))
+    print('std train accuracy: {}'.format(np.std(train_accuracy)))
+    print('Average test accuracy: {}'.format(np.mean(test_accuracy)))
+    print('std train accuracy: {}'.format(np.std(test_accuracy)))
+
 def create_submission(ids,y_pred,name,file_name):
     """
     Create a csv file to submit the output to the challenge arena.
@@ -112,8 +178,3 @@ def create_submission(ids,y_pred,name,file_name):
         for r1,r2 in zip(ids,y_pred):
             dw.writerow({'Id':r1,'Prediction':r2})
 
-
-def calcolo_accuracy(prediction, y_test):
-    a=np.sum(prediction == y_test)
-    accuracy=(len(y_test)-a)/len(y_test)
-    return accuracy

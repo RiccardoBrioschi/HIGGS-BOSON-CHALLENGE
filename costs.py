@@ -27,10 +27,9 @@ def compute_logloss_logistic_regression(y, tx, w):
     Returns:
         the value of the loss (a scalar), corresponding to the input parameters w.
     """
-    predict = sigmoid(tx.dot(w))
-    term = -y*np.log(predict) - (1-y)*np.log(1 - predict)
-    return np.mean(term)
-
+    N = len(y)
+    loss = np.sum(-tx.dot(w)*y + np.log(1+np.exp(tx.dot(w))))
+    return loss / N
 
 def compute_mse(y, tx, w):
     """compute the loss by mse.
@@ -42,10 +41,7 @@ def compute_mse(y, tx, w):
     Returns:
         mse: scalar corresponding to the mse with factor (1 / 2 n) in front of the sum
 
-    >>> compute_mse(np.array([0.1,0.2]), np.array([[2.3, 3.2], [1., 0.1]]), np.array([0.03947092, 0.00319628]))
-    0.006417022764962313
     """
-    
     e = y - tx.dot(w)
     mse = e.dot(e) / (2 * len(e))
     return mse

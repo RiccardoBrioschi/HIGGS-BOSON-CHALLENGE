@@ -3,6 +3,7 @@
 
 import numpy as np
 from costs import *
+from helpers import *
 
 def compute_gradient_linear_regression(y, tx, w):
 
@@ -44,5 +45,6 @@ def compute_gradient_logistic_regression(y,tx,w):
         An array of shape (D, ) (same shape as w), containing the gradient of the loss at w.
     """
     N = len(y)
-    err = sigmoid(tx.dot(w)) - y
-    return tx.T.dot(err) /N
+    grad = tx.T.dot(sigmoid(tx.dot(w))-y)
+    return grad/N
+
