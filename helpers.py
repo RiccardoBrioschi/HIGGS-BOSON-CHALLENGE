@@ -127,7 +127,7 @@ def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = '
     train_accuracy = np.zeros(len(seeds))
     
     for idx,seed in enumerate(seeds):
-        x_train,x_test,y_train,y_test = divide_dataset(tx,y,divide_threshold,seed)
+        x_train,x_test,y_train,y_test = divide_dataset(tx,y,divide_ratio,seed)
         
         x_train_temp = x_train[:,:-4]
         x_test_temp = x_test[:,:-4]
@@ -145,8 +145,8 @@ def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = '
         if method == 'logistic':
         
             w_opt,_ = reg_logistic_regression(y_train,phi_train,lambda_,np.zeros(phi_train.shape[1]),300,0.3)
-            pred_train = sigmoid(phi_train,w_opt)
-            pred_test = sigmoid(phi_test,w_opt)
+            pred_train = sigmoid(phi_train.dot(w_opt))
+            pred_test = sigmoid(phi_test.dot(w_opt))
             pred_train[pred_train >= pred_threshold] = 1
             pred_train[pred_train < pred_threshold] = 0
             pred_test[pred_test >= pred_threshold] = 1
