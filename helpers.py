@@ -5,24 +5,8 @@ import numpy as np
 import csv
 from preprocessing import *
 from implementations import *
+from crossvalidation import *
 
-def build_poly(x, degree):
-    """
-    Polynomial basis functions for input data x, for j=0 up to j=degree.
-    
-    Args:
-        x: numpy array of shape (N,), N is the number of samples.
-        degree: integer.
-        
-    Returns:
-        poly: numpy array of shape (N,d+1)
-    """
-    
-    phi=np.ones((len(x),1))
-    for i in range(1,degree+1):
-        phi=np.c_[phi,x**i]
-        
-    return phi
 
 def load_train_data(path,default_missing_value = -999):
     """
@@ -95,6 +79,12 @@ def predict(tx,w,threshold):
     Prediction function for logistic regresson model.
     """
     prediction = sigmoid(tx.dot(w))
+    prediction[prediction >= threshold] = 1
+    prediction[prediction < threshold] = -1
+    return prediction.astype(int)
+
+def predict_ridge(tx, w, threshold = 0.5):
+    prediction = tx.dot(w)
     prediction[prediction >= threshold] = 1
     prediction[prediction < threshold] = -1
     return prediction.astype(int)

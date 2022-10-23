@@ -3,6 +3,7 @@ from implementations import *
 from costs import *
 from plots import cross_validation_visualization
 from preprocessing import *
+from helpers import *
 
 def build_k_indices(y, k_fold, seed):
     """
@@ -51,8 +52,8 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters):
     y_train = y[train_indices]
     y_test = y[test_indices]
 
-    x_train_temp = x_train[:,:-4]
-    x_test_temp = x_test[:,:-4]
+    x_train_temp = x_train
+    x_test_temp = x_test
 
     # We compute polynomial expansion and add the offset column
     
@@ -145,8 +146,8 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
     y_train = y[train_indices]
     y_test = y[test_indices]
 
-    x_train_temp = x_train[:,:-4]
-    x_test_temp = x_test[:,:-4]
+    x_train_temp = x_train
+    x_test_temp = x_test
 
     # We compute polynomial expansion and add the offset column
     
@@ -155,8 +156,8 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
 
     # Adding last columns (categorical variables)
     
-    poly_train =np.hstack((poly_train,x_train[:,-4:]))
-    poly_test =np.hstack((poly_test,x_test[:,-4:]))
+    poly_train =np.hstack((poly_train,x_train))
+    poly_test =np.hstack((poly_test,x_test))
 
     w_opt, _ = ridge_regression(y_train,poly_train, lambda_)
 
@@ -209,9 +210,9 @@ def cross_validation_demo_ridge(y, tx, k_fold, lambdas, degrees):
     idx_lambda,idx_degree = np.unravel_index(np.argmin(rmse_te),rmse_te.shape)
     best_degree,best_lambda,best_rmse = degrees[idx_degree],lambdas[idx_lambda],rmse_te[idx_lambda,idx_degree]
     
-    if len(degrees) == 1:
-        cross_validation_visualization(lambdas, rmse_tr, rmse_te)
+    #if len(degrees) == 1:
+    #    cross_validation_visualization(lambdas, rmse_tr, rmse_te)
     
-    print("The choice of lambda which leads to the best test rmse is %.5f with a test rmse of %.3f. The best degree is %.1f" % (best_lambda, best_rmse,best_degree))
+    #print("The choice of lambda which leads to the best test rmse is %.5f with a test rmse of %.3f. The best degree is %.1f" % (best_lambda, best_rmse,best_degree))
     return best_degree, best_lambda, best_rmse
 
