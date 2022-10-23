@@ -21,11 +21,17 @@ def divide_dataset_in_subsets(tx,y,ids,indices):
     
     return tx[indices],y[indices],ids[indices]
 
-def return_right_prediction(prediction, ids):
-    prediction_col = np.column_stack([prediction])
-    ids = np.column_stack([ids])
-
-    ind_pred = np.hstack((ids,prediction_col))
-    ind_pred = ind_pred[ind_pred[:, 0].argsort()]
-
-    return ind_pred[:,1:].ravel(), ind_pred[:,:1].ravel()
+def reordering_predictions(predictions,ids):
+    """
+    Helper function to reorder predictions given by each model before creating submission file
+    Arguments:
+    predictions : ndarray of predictions
+    ids : non sorted ids corresponding to each prediction
+    
+    Returns:
+    predictions : predictions sorted according to ids
+    ids : sorted array of ids
+    """
+    
+    new_row_order = np.argsort(ids)
+    return predictions[new_row_order],ids[new_row_order]

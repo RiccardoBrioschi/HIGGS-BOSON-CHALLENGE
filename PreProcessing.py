@@ -111,7 +111,7 @@ def build_poly(x, degree):
         poly: numpy array of shape (N,d+1)
     """
     
-    phi=np.ones(x.shape[0],1)
+    phi=np.ones((x.shape[0],1))
     for i in range(1,degree+1):
         phi=np.c_[phi,x**i]
 

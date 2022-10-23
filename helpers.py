@@ -108,7 +108,7 @@ def divide_dataset(tx,y,ratio,seed):
             
     return tx_train,tx_test,y_train,y_test
 
-def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = 'linear'):
+def compute_accuracy(y_s,tx_s,divide_ratio,lambdas,degrees,pred_threshold=0.5,method = 'linear',gamma = 0.1):
     """ 
     Helper function to compute test and train accuracy of the class model
     """
@@ -116,44 +116,46 @@ def compute_accuracy(y,tx,divide_ratio,lambda_,deg,pred_threshold=0.5,method = '
     test_accuracy = np.zeros(len(seeds))
     train_accuracy = np.zeros(len(seeds))
     
-    for idx,seed in enumerate(seeds):
-        x_train,x_test,y_train,y_test = divide_dataset(tx,y,divide_ratio,seed)
-        
-        x_train_temp = x_train[:,:-4]
-        x_test_temp = x_test[:,:-4]
-        
-        # We compute polynomial expansion and add offset
-        
-        phi_train = build_poly(x_train_temp, deg)
-        phi_test = build_poly(x_test_temp, deg)
-    
-        # Add again categorical variables
-        
-        phi_train=np.hstack((phi_train,x_train[:,-4:]))
-        phi_test=np.hstack((phi_test,x_test[:,-4:]))
-        
-        if method == 'logistic':
-        
-            w_opt,_ = reg_logistic_regression(y_train,phi_train,lambda_,np.zeros(phi_train.shape[1]),300,0.3)
-            pred_train = sigmoid(phi_train.dot(w_opt))
-            pred_test = sigmoid(phi_test.dot(w_opt))
-            pred_train[pred_train >= pred_threshold] = 1
-            pred_train[pred_train < pred_threshold] = 0
-            pred_test[pred_test >= pred_threshold] = 1
-            pred_test[pred_test < pred_threshold] = 0
+    for seed_indices,seed in enumerate(seeds):
+        den_train,den_test = 0,0
+        for idx in range(len(tx_s)):
             
-        elif method == 'linear':
+            x_train,x_test,y_train,y_test = divide_dataset(tx_s[idx],y_s[idx],divide_ratio,seed)
             
-            w_opt,_ = ridge_regression(y_train,phi_train,lambda_)
-            pred_train = phi_train.dot(w_opt)
-            pred_train[pred_train>=pred_threshold]=1
-            pred_train[pred_train<pred_threshold]=0
-            pred_test = phi_test.dot(w_opt)
-            pred_test[pred_test>=pred_threshold]=1
-            pred_test[pred_test<pred_threshold]=0
+            den_train+= len(y_train)
+            den_test+= len(y_test)
+
+            # We compute polynomial expansion and add offset
+        
+            phi_train = build_poly(x_train, degrees[idx])
+            phi_test = build_poly(x_test, degrees[idx])
+   
+        
+            if method == 'logistic':
+        
+                w_opt,_ = reg_logistic_regression(y_train,phi_train,lambdas[idx],np.zeros(phi_train.shape[1]),300,gamma)
+                pred_train = sigmoid(phi_train.dot(w_opt))
+                pred_test = sigmoid(phi_test.dot(w_opt))
+                pred_train[pred_train >= pred_threshold] = 1
+                pred_train[pred_train < pred_threshold] = 0
+                pred_test[pred_test >= pred_threshold] = 1
+                pred_test[pred_test < pred_threshold] = 0
+            
+            elif method == 'linear':
+            
+                w_opt,_ = ridge_regression(y_train,phi_train,lambdas[idx])
+                pred_train = phi_train.dot(w_opt)
+                pred_train[pred_train>=pred_threshold]=1
+                pred_train[pred_train<pred_threshold]=0
+                pred_test = phi_test.dot(w_opt)
+                pred_test[pred_test>=pred_threshold]=1
+                pred_test[pred_test<pred_threshold]=0
            
-        train_accuracy[idx] = np.sum(pred_train == y_train)/len(y_train)
-        test_accuracy[idx] = np.sum(pred_test == y_test)/len(y_test)
+            train_accuracy[seed_indices]+= np.sum(pred_train == y_train)
+            test_accuracy[seed_indices]+= np.sum(pred_test == y_test)
+            
+        train_accuracy[seed_indices]/= den_train
+        test_accuracy[seed_indices]/= den_test
 
     print('Average train accuracy: {}'.format(np.mean(train_accuracy)))
     print('std train accuracy: {}'.format(np.std(train_accuracy)))
