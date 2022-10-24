@@ -75,7 +75,7 @@ def sigmoid(x):
     """
     return 1.0/(1+np.exp(-x))
 
-def predict(tx,w,threshold):
+def predict_logistic(tx,w,threshold):
     """
     Prediction function for logistic regresson model.
     """
