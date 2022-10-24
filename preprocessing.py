@@ -14,17 +14,19 @@ def managing_missing_values(tx,features,threshold=0.5):
     """
     nan_per_columns = np.sum(np.isnan(tx),axis = 0)
     
+    valid_columns = nan_per_columns <=threshold*tx.shape[0]
+    
     # Drop features if less than 50% of rows have missing values
     
-    features = features[nan_per_columns <= threshold*tx.shape[0]]
-    tx=tx[:,nan_per_columns <= threshold*tx.shape[0]]  
+    features = features[valid_columns]
+    tx=tx[:,valid_columns]
 
     for col in range(tx.shape[1]):
         median = np.nanmedian(tx[:,col])
         index = np.isnan(tx[:,col])
         tx[index,col] = median
 
-    return tx, features
+    return tx, features,valid_columns
 
 def capping_outliers(tx):
 
@@ -97,37 +99,37 @@ def standardize(data):
     std_data = std_data / std
     return std_data, mean, std
 
-def build_poly(x, degree):
+def build_poly(x, degree, no_interaction_factors_columns):
     
     """
     Polynomial basis functions for input data x, for j=0 up to j=degree.
+    After performing polynomial expansion, it also inserts interaction factors among 1 degree columns.
     It automatically adds an offset column.
     
     Args:
         x: numpy array of shape (N,), N is the number of samples.
         degree: integer.
+        no_interactions_factors_columns : integer, it is the number of columns related to trigonometric values that will
+                                  not multiply with any column.
         
     Returns:
         poly: numpy array of shape (N,d+1)
     """
     
+    len_without_offset_and_expansion = x.shape[1] - no_interaction_factors_columns
+    
     phi=np.ones((x.shape[0],1))
     for i in range(1,degree+1):
         phi=np.c_[phi,x**i]
 
+    # we now introduce interaction factors (we start from column index one to avoid multiplying columns for the offset)
+    
+    for i in range(1,len_without_offset_and_expansion-1):
+        for j in range(i+1,len_without_offset_and_expansion):
+            phi = np.c_[phi, phi[:,i]*phi[:,j]]
+            
     return phi
 
-def build_interaction_factors(tx):
-    """ 
-    Adding interaction factors to the dataset by miltiplying pairs of column.
-    """
-    num_columns = tx.shape[1]
-    
-    for i in range(num_columns-1):
-        for j in range(i+1,num_columns):
-            tx = np.c_[tx, tx[:,i]*tx[:,j]]
-    return tx  
-    
     
     
     

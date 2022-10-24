@@ -37,10 +37,11 @@ def load_test_data(path,missing_values = -999.0):
     tx : feature matrix
     y : prediction converted according to the rule {'b': 1, 's': 0}
     """
+    columns_labels = np.genfromtxt(path, delimiter = ',', max_rows = 1, dtype = str, usecols = list(range(2,32)))
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
     tx = np.genfromtxt(path,skip_header = 1, delimiter = ',', usecols = list(range(2,32)))
     tx[tx == missing_values]=np.nan
-    return tx,ids
+    return tx,ids,columns_labels
 
 
 def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
@@ -108,7 +109,7 @@ def divide_dataset(tx,y,ratio,seed):
             
     return tx_train,tx_test,y_train,y_test
 
-def compute_accuracy(y_s,tx_s,divide_ratio,lambdas,degrees,pred_threshold=0.5,method = 'linear',gamma = 0.1):
+def compute_accuracy(y_s,tx_s,divide_ratio,lambdas,degrees,no_interaction_factors,pred_threshold=0.5,method = 'linear',gamma = 0.1):
     """ 
     Helper function to compute test and train accuracy of the class model
     """
@@ -125,10 +126,10 @@ def compute_accuracy(y_s,tx_s,divide_ratio,lambdas,degrees,pred_threshold=0.5,me
             den_train+= len(y_train)
             den_test+= len(y_test)
 
-            # We compute polynomial expansion and add offset
+            # We compute polynomial expansion, add offset and interaction factors
         
-            phi_train = build_poly(x_train, degrees[idx])
-            phi_test = build_poly(x_test, degrees[idx])
+            phi_train = build_poly(x_train, degrees[idx],no_interaction_factors[idx])
+            phi_test = build_poly(x_test, degrees[idx],no_interaction_factors[idx])
    
         
             if method == 'logistic':

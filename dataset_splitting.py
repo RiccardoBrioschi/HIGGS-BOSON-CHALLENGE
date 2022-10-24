@@ -14,12 +14,19 @@ def divide_indices_in_subsets(tx,categorical_column):
     
     return indices_cat_0, indices_cat_1, indices_cat_2_3
 
-def divide_dataset_in_subsets(tx,y,ids,indices):
+def divide_train_dataset_in_subsets(tx,y,ids,indices):
     """
-    Function that actually divides the dataset according to the boolean masks passed as arguments
+    Function that actually divides train dataset according to the boolean masks passed as arguments
     """
     
     return tx[indices],y[indices],ids[indices]
+
+def divide_test_dataset_in_subsets(tx,ids,indices):
+    """
+    Function that actually divides test dataset according to the boolean masks passed as arguments
+    """
+    
+    return tx[indices],ids[indices]
 
 def reordering_predictions(predictions,ids):
     """

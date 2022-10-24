@@ -24,7 +24,7 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 
-def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters):
+def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters,no_interaction_factors):
     """
     Return the loss of ridge regression for a fold corresponding to k_indices
     
@@ -53,8 +53,8 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters):
 
     # We compute polynomial expansion (and automatically add the offset column)
     
-    poly_train = build_poly(x_train, degree)
-    poly_test = build_poly(x_test, degree)
+    poly_train = build_poly(x_train, degree,no_interaction_factors)
+    poly_test = build_poly(x_test, degree,no_interaction_factors)
 
     # Finding optimal weights
     
@@ -67,7 +67,7 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters):
 
     return loss_tr, loss_te
 
-def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,seed = 10):
+def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,no_interaction_factors,seed = 10):
     """
     Cross validation over regularisation parameter lambda.
     
@@ -95,7 +95,7 @@ def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,s
             l_tr = 0
             l_te = 0
             for k in range(k_fold):
-                loss_tr, loss_te = cross_validation_log(y,tx, k_idx,k,param, gamma,deg, max_iters)
+                loss_tr, loss_te = cross_validation_log(y,tx, k_idx,k,param, gamma,deg, max_iters,no_interaction_factors)
                 l_te += loss_te
                 l_tr += loss_tr
             l_te = l_te/k_fold
@@ -107,11 +107,11 @@ def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,s
     best_degree,best_lambda,best_rmse = degrees[idx_degree],lambdas[idx_lambda],rmse_te[idx_lambda,idx_degree]
     
 
-    print("The choice of lambda which leads to the best test rmse is %.5f with a test rmse of %.3f. The best degree is %.1f" % (best_lambda, best_rmse,best_degree))
+    print("The choice of lambda which leads to the best test logloss is %.5f with a test logloss of %.3f. The best degree is %.1f" % (best_lambda, best_rmse,best_degree))
     return best_degree, best_lambda, best_rmse
 
 
-def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
+def cross_validation_ridge(y, x, k_indices, k, lambda_, degree, no_interaction_factors):
     """return the loss of ridge regression for a fold corresponding to k_indices
     
     Args:
@@ -138,12 +138,12 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
 
     # We compute polynomial expansion (and automatically add the offset column)
     
-    poly_train = build_poly(x_train, degree)
-    poly_test = build_poly(x_test, degree)
+    poly_train = build_poly(x_train, degree,no_interaction_factors)
+    poly_test = build_poly(x_test, degree, no_interaction_factors)
     
     # Finding optimal weights
 
-    w_opt, _ = ridge_regression(y_train,poly_train, lambda_)
+    w_opt, _ =ridge_regression(y_train,poly_train, lambda_)
 
     mse_train = compute_loss_linear_regression(y_train,poly_train, w_opt)
     mse_test = compute_loss_linear_regression(y_test,poly_test, w_opt)
@@ -154,7 +154,7 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
 
 
 
-def cross_validation_demo_ridge(y, tx, k_fold, lambdas, degrees, seed = 12):
+def cross_validation_demo_ridge(y, tx, k_fold, lambdas, degrees,no_interaction_factors,seed = 12):
     """cross validation over regularisation parameter lambda and hyperparameter degree.
     
     Args:
@@ -181,7 +181,7 @@ def cross_validation_demo_ridge(y, tx, k_fold, lambdas, degrees, seed = 12):
             l_tr = 0
             l_te = 0
             for k in range(k_fold):
-                loss_tr, loss_te = cross_validation_ridge(y,tx, k_idx, k,param, deg)
+                loss_tr, loss_te = cross_validation_ridge(y,tx, k_idx, k,param, deg,no_interaction_factors)
                 l_te += loss_te
                 l_tr += loss_tr
             l_te = l_te/k_fold
