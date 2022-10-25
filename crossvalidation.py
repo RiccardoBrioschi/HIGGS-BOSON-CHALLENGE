@@ -143,7 +143,7 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree, no_interaction_f
     
     # Finding optimal weights
 
-    w_opt, _ =ridge_regression(y_train,poly_train, lambda_)
+    w_opt, _ = ridge_regression(y_train,poly_train, lambda_)
 
     mse_train = compute_loss_linear_regression(y_train,poly_train, w_opt)
     mse_test = compute_loss_linear_regression(y_test,poly_test, w_opt)

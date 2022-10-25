@@ -52,7 +52,7 @@ def trigonometrics(tx,columns,features):
     tx :
     features :
     """
-
+    
     sin = np.sin(tx[:,columns])
     cos = np.cos(tx[:,columns])
 
@@ -65,8 +65,7 @@ def trigonometrics(tx,columns,features):
         features = np.append(features,name_s)
         features = np.append(features,name_c)
         
-    tx = np.delete(tx,columns,axis=1)
-    features = np.delete(features,columns)
+    tx = np.delete(tx,columns,axis = 1)
 
     return tx, features
 
@@ -116,9 +115,10 @@ def build_poly(x, degree, no_interaction_factors_columns):
         poly: numpy array of shape (N,d+1)
     """
     
-    len_without_offset_and_expansion = x.shape[1] - no_interaction_factors_columns
+    len_without_offset_and_expansion = x.shape[1]-no_interaction_factors_columns
     
     phi=np.ones((x.shape[0],1))
+    
     for i in range(1,degree+1):
         phi=np.c_[phi,x**i]
 
