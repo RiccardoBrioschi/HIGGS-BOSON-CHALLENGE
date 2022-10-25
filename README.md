@@ -14,13 +14,13 @@ With an accuracy of 0.836 we obtained the n-th place out of more than 200 teams.
 We worked with `python3.8.5`. The library we used to compute our ML model is `numpy` and the library we used for visualization is `matplotlib`.
 
 ## Description of notebooks:
-Following you can find what each of the file in the repo does. The order in which we describe them follow the pipeline we used to arrive at our results.
+Here you can find what each of the file in the repo does. The order in which we describe them follows the pipeline we used to obtain our results.
 - `helpers.py`: we implemented all the functions in support to our code in others .py files.
-- `gradients.py`: we implemented all the gradient used in the implementations of the 6 methods.
+- `gradients.py`: we implemented all the gradients used in the implementations of the 6 methods.
 - `costs.py`: we implemented all the cost functions used in the implementations of the 6 methods.
-- `implementations.py`: we implemented all the 6 methods with that we could train the model.
+- `implementations.py`: we implemented all the 6 methods.
 - `preprocessing.py`: we implemented some functions we used to process the data. The majority of them was used in `features_engineering.ipynb`
-- `features_engineering.ipynb`: In this notebook we decided which features to drop and in which manner to transform the other ones.
+- `features_engineering.ipynb`: In this notebook we decide which features to drop and how to handle data.
 - `crossvalidation.py`: we implemented the functions used to train the best hyperparameters for our model (ridge regression).
 - `choosing_hyperparameters.ipynb`: we trained the best hyperparameters for our model (ridge regression).
 - `dataset_splitting.py`: we implemented some functions useful to have a local computation of accuracy of our model before the submission.
