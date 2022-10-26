@@ -2,10 +2,10 @@
 In the repository you can find the code we used for [Higgs Boson Challenge 2022](https://www.aicrowd.com/challenges/epfl-machine-learning-higgs), proposed as project 1 in ML course at EPFL [(CS-433)](https://www.epfl.ch/labs/mlo/machine-learning-cs-433/). 
 
 ## Team:
-Our team is composed by:  
+Our team (named `FGRxML`) is composed by:  
 - Brioschi Riccardo: [@RiccardoBrioschi](https://github.com/RiccardoBrioschi)  
 - D'Angeli Gabriele: [@gabrieledangeli](https://github.com/gabrieledangeli)  
-- Di Gennaro Federico: [@FedericoDiGenanro](https://github.com/FedericoDiGennaro)  
+- Di Gennaro Federico: [@FedericoDiGenanro](https://github.com/FedericoDiGennaro)   
 With an accuracy of 0.836 we obtained the n-th place out of more than 200 teams.
 
 # Project pipeline
