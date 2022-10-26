@@ -6,7 +6,8 @@ Our team (named `FGRxML`) is composed by:
 - Brioschi Riccardo: [@RiccardoBrioschi](https://github.com/RiccardoBrioschi)  
 - D'Angeli Gabriele: [@gabrieledangeli](https://github.com/gabrieledangeli)  
 - Di Gennaro Federico: [@FedericoDiGenanro](https://github.com/FedericoDiGennaro)   
-\newline With an accuracy of 0.836 we obtained the n-th place out of more than 200 teams.
+
+With an accuracy of 0.836 we obtained the n-th place out of more than 200 teams.
 
 # Project pipeline
 
