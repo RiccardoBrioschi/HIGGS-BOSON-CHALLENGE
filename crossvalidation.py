@@ -30,11 +30,14 @@ def cross_validation_log(y, x, k_indices, k, lambda_, gamma,degree, max_iters,no
     
     Args:
         y:          shape=(N,)
-        x:          shape=(N,)
+        x:          shape=(N,D)
         k_indices:  2D array returned by build_k_indices()
         k:          scalar, the k-th fold (N.B.: not to confused with k_fold which is the fold nums)
         lambda_:    scalar, cf. ridge_regression()
+        gamma :     scalar, the learning rate
         degree:     scalar, cf. build_poly()
+        max_iters : scalar
+        no_interaction_factors : number of trigonometric features in the dataset
 
     Returns:
         train and test root mean square errors rmse = sqrt(2 mse)
@@ -75,6 +78,10 @@ def cross_validation_demo_log(y, tx, k_fold, lambdas, gamma, max_iters,degrees,n
         degrees: list of degrees of the polynomial expansion
         k_fold: integer, the number of folds
         lambdas: shape = (p, ) where p is the number of values of lambda to test
+        gamma :     scalar, the learning rate
+        degrees: =  shape (q, ) where q is the number of degrees to test
+        max_iters : scalar
+        no_interaction_factors : number of trigonometric features in the dataset
     Returns:
         best_lambda : scalar, value of the best lambda
         best_rmse : scalar, the associated root mean squared error for the best lambda
@@ -120,7 +127,8 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree, no_interaction_f
         k_indices:  2D array returned by build_k_indices()
         k:          scalar, the k-th fold (N.B.: not to confused with k_fold which is the fold nums)
         lambda_:    scalar, cf. ridge_regression()
-
+        degree:     scalar, cf. build_poly()
+        no_interaction_factors : number of trigonometric features in the dataset
     Returns:
         train and test root mean square errors rmse = sqrt(2 mse)
     """
@@ -161,6 +169,7 @@ def cross_validation_demo_ridge(y, tx, k_fold, lambdas, degrees,no_interaction_f
         k_fold: integer, the number of folds
         lambdas: shape = (p, ) where p is the number of values of lambda to test
         degrees: list of degrees for polynomial expansion
+        no_interaction_factors : number of trigonometric features in the dataset
     Returns:
         best_degree : integer, value of the best degree
         best_lambda : scalar, value of the best lambda

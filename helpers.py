@@ -11,13 +11,13 @@ from crossvalidation import *
 def load_train_data(path,default_missing_value = -999):
     """
     Load data function. 
-    Arguments:
+    Args:
     path : path to find the file
 
     Returns
     ids : numpy array containing ids of the observed data
     tx : feature matrix
-    y : prediction converted according to the rule {'b': 1, 's': 0}
+    y : prediction converted according to the rule {'b': 0, 's': 1}
     """
     columns_labels = np.genfromtxt(path, delimiter = ',', max_rows = 1, dtype = str, usecols = list(range(2,32)))
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
@@ -29,13 +29,12 @@ def load_train_data(path,default_missing_value = -999):
 def load_test_data(path,missing_values = -999.0):
     """
     Load data function. 
-    Arguments:
+    Args:
     path : path to find the file
 
     Returns
     ids : numpy array containing ids of the observed data
     tx : feature matrix
-    y : prediction converted according to the rule {'b': 1, 's': 0}
     """
     columns_labels = np.genfromtxt(path, delimiter = ',', max_rows = 1, dtype = str, usecols = list(range(2,32)))
     ids = np.genfromtxt(path, delimiter = ',',usecols = [0], dtype = int, skip_header = 1)
@@ -50,9 +49,6 @@ def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
     Takes as input two iterables (here the output desired values 'y' and the input data 'tx')
     Outputs an iterator which gives mini-batches of `batch_size` matching elements from `y` and `tx`.
     Data can be randomly shuffled to avoid ordering in the original data messing with the randomness of the minibatches.
-    Example of use :
-    for minibatch_y, minibatch_tx in batch_iter(y, tx, 32):
-        <DO-SOMETHING>
     """
     data_size = len(y)
 
@@ -77,7 +73,7 @@ def sigmoid(x):
 
 def predict_logistic(tx,w,threshold):
     """
-    Prediction function for logistic regresson model.
+    Compute predictions for logistic regresson model.
     """
     prediction = sigmoid(tx.dot(w))
     prediction[prediction >= threshold] = 1
@@ -85,6 +81,9 @@ def predict_logistic(tx,w,threshold):
     return prediction.astype(int)
 
 def predict_ridge(tx, w, threshold = 0.5):
+    """ 
+    Compute prediction for ridge regression. It also works for every other linear model used for classification
+    """
     prediction = tx.dot(w)
     prediction[prediction >= threshold] = 1
     prediction[prediction < threshold] = -1
@@ -92,9 +91,10 @@ def predict_ridge(tx, w, threshold = 0.5):
 
 def divide_dataset(tx,y,ratio,seed):
     """
-    Divide the dataset into two parts.
-    Arguments
-    ratio: ratio of training data
+    Divide the dataset into train and test sets.
+    
+    Args
+    ratio: scalar, ratio of training data
     
     Returns:
     tx_train,tx_test,y_train,y_test: train and test data to use

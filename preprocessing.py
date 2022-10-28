@@ -5,12 +5,14 @@ import numpy as np
 def managing_missing_values(tx,features,threshold=0.5):
     """
     Filling np.nan with the median of the columns
-    Arguments:
+    Args:
     Input:
-    tx: matrix having missing values
+    tx: array of size (N,D) having missing values
+    features : = array of size (D,) containing the name of each feature
+    threshold : = scalar, the ratio in the number of rows that determines whether a column should be dropped or not.
 
     Output:
-    tx: matrix after first processing
+    tx:  = array of size (N,K) after first processing
     """
     nan_per_columns = np.sum(np.isnan(tx),axis = 0)
     
@@ -31,7 +33,7 @@ def managing_missing_values(tx,features,threshold=0.5):
 def capping_outliers(tx):
 
     """
-    Capping outliers
+    Capping outliers using 5% and 95% percentile in each column
     """
     for col in range(tx.shape[1]):
         indx1 = tx[:,col] > np.percentile(tx[:,col],95)
@@ -42,15 +44,15 @@ def capping_outliers(tx):
 
 def trigonometrics(tx,columns,features):
     """
-    Define trigonometric function of angles variables.
-    Arguments:
-    tx :
-    columns :
-    features :
+    Define trigonometric function (sine and cosine) of angles in columns having indices in columns array passed as input.
+    Args:
+    tx : array of size (N,D)
+    columns : array of size (q, ) containing the indices of columns containing angles
+    features : array of size (D, ) containing the name for each feature
     
     Returns
-    tx :
-    features :
+    tx : array of size (N, D + 2*q)
+    features : array of size (D + 2*q)
     """
     
     sin = np.sin(tx[:,columns])
@@ -71,12 +73,14 @@ def trigonometrics(tx,columns,features):
 
 def log_transform(tx):
     """ 
-    Function to transform skewed distributions
-    Arguments
-    tx :
+    Function to transform skewed distributions. 
+    It applies the log transform defined as X_new = log (1 + x_old)
+    
+    Args
+    tx : array of size (N,D)
     
     Returns
-    tx :
+    tx : array of ize (N,D)
     """
     tx = np.log(1+tx)
     return tx
@@ -84,8 +88,12 @@ def log_transform(tx):
 def standardize(data):
     """ 
     This function standardizes the feature matrix.
+    
+    Args:
+    data : = array of size (N,D)
+    
     Returns:
-    std_data : standardize data
+    std_data : array of size (N,D) containing standardize data
     mean : mean of data
     std : standard deviation of data.
     """
@@ -102,17 +110,18 @@ def build_poly(x, degree, no_interaction_factors_columns):
     
     """
     Polynomial basis functions for input data x, for j=0 up to j=degree.
-    After performing polynomial expansion, it also inserts interaction factors among 1 degree columns.
+    After performing polynomial expansion, it also add interaction factors among 1 degree columns.
     It automatically adds an offset column.
     
     Args:
-        x: numpy array of shape (N,), N is the number of samples.
-        degree: integer.
-        no_interactions_factors_columns : integer, it is the number of columns related to trigonometric values that will
-                                  not multiply with any column.
+    x: = array of size (N,), N is the number of samples.
+    degree: = integer.
+    no_interactions_factors_columns : = integer, it is the number of columns related to trigonometric values that will
+                                               not be multiplied by any other feature
+                                  
         
     Returns:
-        poly: numpy array of shape (N,d+1)
+    poly: =  array of size (N,d+1)
     """
     
     len_without_offset_and_expansion = x.shape[1]-no_interaction_factors_columns
