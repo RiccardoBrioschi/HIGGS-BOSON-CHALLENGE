@@ -17,12 +17,12 @@ We worked with `python3.8.5`. The library used to compute our ML model is `numpy
 ## Description of notebooks:
 Here you can find what each file in the repo does. The order in which they are described follows the pipeline we used to obtain our results.
 - `helpers.py`: implementation of  all the "support" functions used in others .py files.
-- `gradients.py`: implementation all the gradients used to train 6 methods.
+- `gradients.py`: implementation of all the gradients used to train 6 methods.
 - `costs.py`:  the cost functions used in the implementations of the 6 methods.
 - `implementations.py`: actual implementation of all 6 methods.
 - `preprocessing.py`: implementation of functions used to process the data. The majority of them were used in `features_engineering.ipynb`
 - `features_engineering.ipynb`: notebook for feature engineering (feature selection, feature transformation,...).
-- `crossvalidation.py`: implemetation of fuction used to train the best hyperparameters for our model (ridge regression).
+- `crossvalidation.py`: implemetation of functions used to train the best hyperparameters for our model (ridge regression).
 - `choosing_hyperparameters.ipynb`: notebook to select the best hyperparameters for our model (ridge regression).
 - `dataset_splitting.py`: implementation of functions to have a local computation of accuracy of our model before the submission.
 - `run.py`: it returns our predictions after using the selected models to predict test data.
