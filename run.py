@@ -40,7 +40,7 @@ for idx in range(3):
 
 # Defining optimal hyperparameters values (see notebook choosing_hyperparameters.ipynb for more details)
 
-best_lambdas = [0.000001]*3
+best_lambdas = [0.0001]*3
 best_degrees = [7,7,7]
 
 # Loading test data
