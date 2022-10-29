@@ -110,5 +110,5 @@ def preprocessing(tx,y,ids,features):
     useful_c2 = np.delete(c,useless_c2)
     list_subsets[2] = list_subsets[2][:,useful_c2]
     list_features[2] = list_features[2][useful_c2]
-    
+        
     return list_subsets, list_features, y_0, y_1, y_2_3, columns_to_drop_in_subsets

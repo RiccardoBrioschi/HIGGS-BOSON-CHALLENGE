@@ -68,6 +68,7 @@ def trigonometrics(tx,columns,features):
         features = np.append(features,name_c)
         
     tx = np.delete(tx,columns,axis = 1)
+    features = np.delete(features, columns)
 
     return tx, features
 
