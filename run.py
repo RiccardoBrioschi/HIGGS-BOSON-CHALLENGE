@@ -39,7 +39,7 @@ for idx in range(3):
     list_std.append(std)
 
 # Defining optimal hyperparameters values (see notebook choosing_hyperparameters.ipynb for more details). The values obtained in the
-# previous notebbok have been rounded to the closes power of 10.
+# previous notebook have been rounded to the closest power of 10.
 
 best_lambdas = [0.0001,0.0001,0.00001]
 best_degrees = [7,7,7]
