@@ -21,7 +21,7 @@ Here you can find what each file in the repo does. The order in which they are d
 - `costs.py`:  the cost functions used in the implementations of the 6 methods.
 - `implementations.py`: actual implementation of all 6 methods.
 - `preprocessing.py`: implementation of functions used to process the data. The majority of them were used in `features_engineering.ipynb`
-- `feature_engineering.py`: pyhon file for feature engineering (feature selection, feature transformation,...).
+- `feature_engineering.py`: python file for feature engineering (feature selection, feature transformation,...).
 - `crossvalidation.py`: implemetation of functions used to train the best hyperparameters for our model (ridge regression).
 - `choosing_hyperparameters.ipynb`: notebook to select the best hyperparameters for our model (ridge regression).
 - `dataset_splitting.py`: implementation of functions to have a local computation of accuracy of our model before the submission.
