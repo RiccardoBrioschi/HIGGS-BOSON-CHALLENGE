@@ -1,8 +1,8 @@
-
 """ functions used to compute gradients """
 
 import numpy as np
 from costs import *
+
 
 def compute_gradient_linear_regression(y, tx, w):
 
@@ -15,7 +15,8 @@ def compute_gradient_linear_regression(y, tx, w):
         An array of shape (D, ) (same shape as w), containing the gradient of the loss at w.
     """
     err = y - tx.dot(w)
-    return - tx.T.dot(err) / len(y)
+    return -tx.T.dot(err) / len(y)
+
 
 def compute_stoch_gradient(y, tx, w):
 
@@ -32,7 +33,8 @@ def compute_stoch_gradient(y, tx, w):
     B = len(y)
     return -tx.T.dot(err) / B
 
-def compute_gradient_logistic_regression(y,tx,w):
+
+def compute_gradient_logistic_regression(y, tx, w):
 
     """Computes the gradient at w for logistic regression (gradient of -log likelihood 
        we want to minimize).
@@ -45,6 +47,5 @@ def compute_gradient_logistic_regression(y,tx,w):
     """
     N = len(y)
     sigma = 1.0 / (1 + np.exp(-tx.dot(w)))
-    grad = tx.T.dot(sigma-y)
-    return grad/N
-
+    grad = tx.T.dot(sigma - y)
+    return grad / N

@@ -1,9 +1,9 @@
-
-'Useful functions to use during the project '
+"Useful functions to use during the project "
 
 import numpy as np
 from costs import *
 from gradients import *
+
 
 def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
     """
@@ -43,10 +43,11 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
         """
     w = initial_w
     for n in range(max_iters):
-        grad = compute_gradient_linear_regression(y,tx,w)
-        w = w - grad*gamma
-    loss = compute_loss_linear_regression(y,tx,w)
-    return w,loss
+        grad = compute_gradient_linear_regression(y, tx, w)
+        w = w - grad * gamma
+    loss = compute_loss_linear_regression(y, tx, w)
+    return w, loss
+
 
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 
@@ -63,14 +64,15 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """
     w = initial_w
     for n in range(max_iters):
-        for y_minibatch, tx_minibatch in batch_iter(y,tx,1):
-            stoch_grad = compute_stoch_gradient(y_minibatch,tx_minibatch,w)
-            w = w - gamma*stoch_grad
-    loss = compute_loss_linear_regression(y,tx,w)
-    return w,loss
+        for y_minibatch, tx_minibatch in batch_iter(y, tx, 1):
+            stoch_grad = compute_stoch_gradient(y_minibatch, tx_minibatch, w)
+            w = w - gamma * stoch_grad
+    loss = compute_loss_linear_regression(y, tx, w)
+    return w, loss
+
 
 def least_squares(y, tx):
-    
+
     """ The least square algorithm or linear regression using normal equations.
     Args:
         y : shape = (N,)
@@ -78,13 +80,14 @@ def least_squares(y, tx):
     Returns:
         w : the optimal model parameters as numpy arrays of shape (D,)
         loss: the loss value (scalar) for least squares"""
-        
-    A = np.dot(tx.T,tx)
-    b = np.dot(tx.T,y)
-    w = np.linalg.solve(A,b)
-    return w, compute_loss_linear_regression(y,tx,w)
 
-def ridge_regression(y, tx, lambda_) :
+    A = np.dot(tx.T, tx)
+    b = np.dot(tx.T, y)
+    w = np.linalg.solve(A, b)
+    return w, compute_loss_linear_regression(y, tx, w)
+
+
+def ridge_regression(y, tx, lambda_):
     """Implement ridge regression using normal equations.
     
     Args:
@@ -96,15 +99,16 @@ def ridge_regression(y, tx, lambda_) :
         w: optimal weights, numpy array of shape(D,), D is the number of features.
         ridge_loss: the loss value (scalar) for ridge regression.
     """
-    lambda_tilde =  2 * lambda_ * len(y)
-    A = tx.T.dot(tx) + lambda_tilde*np.eye(tx.shape[1])
+    lambda_tilde = 2 * lambda_ * len(y)
+    A = tx.T.dot(tx) + lambda_tilde * np.eye(tx.shape[1])
     b = tx.T.dot(y)
-    w = np.linalg.solve(A,b)
-    ridge_loss = compute_loss_linear_regression(y,tx,w) 
+    w = np.linalg.solve(A, b)
+    ridge_loss = compute_loss_linear_regression(y, tx, w)
     return w, ridge_loss
 
+
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
-    
+
     """The Gradient Descent (GD) algorithm for logistic regression.
     Args:
         y: shape=(N, )
@@ -118,12 +122,13 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         """
     w = initial_w
     for n in range(max_iters):
-        grad = compute_gradient_logistic_regression(y,tx,w)
-        w = w - gamma*grad
-    loss = compute_logloss_logistic_regression(y,tx,w)
+        grad = compute_gradient_logistic_regression(y, tx, w)
+        w = w - gamma * grad
+    loss = compute_logloss_logistic_regression(y, tx, w)
     return w, loss
 
-def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
+
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 
     """The Gradient Descent (GD) algorithm for regularized logistic regression.
     Args:
@@ -139,9 +144,7 @@ def reg_logistic_regression(y, tx, lambda_ ,initial_w, max_iters, gamma):
     w = initial_w
     N = len(y)
     for n in range(max_iters):
-        grad = compute_gradient_logistic_regression(y,tx,w) + 2*lambda_*w
-        w = w - gamma*grad
-    loss = compute_logloss_logistic_regression(y,tx,w)
+        grad = compute_gradient_logistic_regression(y, tx, w) + 2 * lambda_ * w
+        w = w - gamma * grad
+    loss = compute_logloss_logistic_regression(y, tx, w)
     return w, loss
-
-

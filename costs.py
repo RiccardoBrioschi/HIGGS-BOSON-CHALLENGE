@@ -1,7 +1,7 @@
-
 """ functions used to compute loss """
 
 import numpy as np
+
 
 def compute_loss_linear_regression(y, tx, w):
 
@@ -14,10 +14,11 @@ def compute_loss_linear_regression(y, tx, w):
         the value of the loss (a scalar), corresponding to the input parameters w.
     """
     err = y - tx.dot(w)
-    return np.sum(err**2) / (2*len(y))
+    return np.sum(err ** 2) / (2 * len(y))
+
 
 def compute_logloss_logistic_regression(y, tx, w):
-    
+
     """Calculate the loss for logistic regression.
     Args:
         y: shape=(N, )
@@ -27,8 +28,9 @@ def compute_logloss_logistic_regression(y, tx, w):
         the value of the loss (a scalar), corresponding to the input parameters w.
     """
     N = len(y)
-    loss = np.sum(-tx.dot(w)*y + np.log(1+np.exp(tx.dot(w))))
+    loss = np.sum(-tx.dot(w) * y + np.log(1 + np.exp(tx.dot(w))))
     return loss / N
+
 
 def compute_mse(y, tx, w):
     """compute the loss by mse.
