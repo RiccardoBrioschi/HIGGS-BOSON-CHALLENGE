@@ -5,7 +5,7 @@ import numpy as np
 
 def compute_loss_linear_regression(y, tx, w):
 
-    """Calculate the loss using either MSE.
+    """Calculate loss using MSE.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -19,7 +19,7 @@ def compute_loss_linear_regression(y, tx, w):
 
 def compute_logloss_logistic_regression(y, tx, w):
 
-    """Calculate the loss for logistic regression.
+    """Calculate log-loss for logistic regression and regularized logistic regression.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -32,17 +32,3 @@ def compute_logloss_logistic_regression(y, tx, w):
     return loss / N
 
 
-def compute_mse(y, tx, w):
-    """compute the loss by mse.
-    Args:
-        y: numpy array of shape (N,), N is the number of samples.
-        tx: numpy array of shape (N,D), D is the number of features.
-        w: weights, numpy array of shape(D,), D is the number of features.
-    
-    Returns:
-        mse: scalar corresponding to the mse with factor (1 / 2 n) in front of the sum
-
-    """
-    e = y - tx.dot(w)
-    mse = e.dot(e) / (2 * len(e))
-    return mse
