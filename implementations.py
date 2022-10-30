@@ -28,7 +28,7 @@ def batch_iter(y, tx, batch_size=1, num_batches=1, shuffle=True):
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
 
-def mean_squared_error_GD(y, tx, initial_w, max_iters, gamma):
+def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
 
     """The Gradient Descent (GD) algorithm for linear regression.
     Args:
@@ -48,7 +48,7 @@ def mean_squared_error_GD(y, tx, initial_w, max_iters, gamma):
     loss = compute_loss_linear_regression(y,tx,w)
     return w,loss
 
-def mean_squared_error_SGD(y, tx, initial_w, max_iters, gamma):
+def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 
     """The Stochastic Gradient Descent algorithm (SGD) for linear regression.
     Args:
