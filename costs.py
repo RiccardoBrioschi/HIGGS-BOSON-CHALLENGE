@@ -30,5 +30,3 @@ def compute_logloss_logistic_regression(y, tx, w):
     N = len(y)
     loss = np.sum(-tx.dot(w) * y + np.log(1 + np.exp(tx.dot(w))))
     return loss / N
-
-
