@@ -163,19 +163,9 @@ def compute_accuracy(
                 pred_test = phi_test.dot(w_opt)
                 pred_test[pred_test >= pred_threshold] = 1
                 pred_test[pred_test < pred_threshold] = 0
-                
-            if method == 'GD_linear_regression':
-                
-                w_opt, _ = mean_squared_error_gd(y_train, phi_train, np.zeros(phi_train.shape[1]),500, gamma)
-                pred_train = phi_train.dot(w_opt)
-                pred_train[pred_train >= pred_threshold] = 1
-                pred_train[pred_train < pred_threshold] = 0
-                pred_test = phi_test.dot(w_opt)
-                pred_test[pred_test >= pred_threshold] = 1
-                pred_test[pred_test < pred_threshold] = 0
-            
-            if method == 'ls_normal_equations':
-                
+
+            if method == "ls_normal_equations":
+
                 w_opt, _ = least_squares(y_train, phi_train)
                 pred_train = phi_train.dot(w_opt)
                 pred_train[pred_train >= pred_threshold] = 1
