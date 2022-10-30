@@ -2,7 +2,6 @@
 """ functions used to compute loss """
 
 import numpy as np
-from helpers import *
 
 def compute_loss_linear_regression(y, tx, w):
 
