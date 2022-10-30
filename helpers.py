@@ -12,12 +12,12 @@ def load_train_data(path, default_missing_value=-999):
     """
     Load data function. 
     Args:
-    path : path to find the file
+        path : path to find the file
 
     Returns
-    ids : numpy array containing ids of the observed data
-    tx : feature matrix
-    y : prediction converted according to the rule {'b': 0, 's': 1}
+        ids : array of size (N,) containing ids of the observed data
+        tx  : array of size (N,D) corresponding to feature matrix
+        y   : prediction converted according to the rule {'b': 0, 's': 1}
     """
     columns_labels = np.genfromtxt(
         path, delimiter=",", max_rows=1, dtype=str, usecols=list(range(2, 32))
@@ -40,11 +40,11 @@ def load_test_data(path, missing_values=-999.0):
     """
     Load data function. 
     Args:
-    path : path to find the file
+        path : path to find the file
 
     Returns
-    ids : numpy array containing ids of the observed data
-    tx : feature matrix
+        ids : array of size (N,) containing ids of the observed data
+        tx :  array if size (N,D) corresponding to feature matrix
     """
     columns_labels = np.genfromtxt(
         path, delimiter=",", max_rows=1, dtype=str, usecols=list(range(2, 32))
@@ -87,10 +87,10 @@ def divide_dataset(tx, y, ratio, seed):
     Divide the dataset into train and test sets.
     
     Args
-    ratio: scalar, ratio of training data
+        ratio: scalar, ratio of training data w.r.t the total number of observations
     
     Returns:
-    tx_train,tx_test,y_train,y_test: train and test data to use
+        tx_train,tx_test,y_train,y_test: train and test data to use
     """
     np.random.seed(seed)
     N = int(np.floor(ratio * len(y)))

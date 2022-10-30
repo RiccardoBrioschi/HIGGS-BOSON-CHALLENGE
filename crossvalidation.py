@@ -92,8 +92,9 @@ def cross_validation_demo_log(
         max_iters : scalar
         no_interaction_factors : number of trigonometric features in the dataset
     Returns:
+        best degree : a scalar, value of the best degree
         best_lambda : scalar, value of the best lambda
-        best_rmse : scalar, the associated root mean squared error for the best lambda
+        best_rmse : scalar, the associated root mean squared error for the best lambda and best degree
     """
 
     k_fold = k_fold
@@ -199,7 +200,7 @@ def cross_validation_demo_ridge(
         degrees: list of degrees for polynomial expansion
         no_interaction_factors : number of trigonometric features in the dataset
     Returns:
-        best_degree : integer, value of the best degree
+        best_degree : scalar, value of the best degree
         best_lambda : scalar, value of the best lambda
         best_rmse : scalar, the associated root mean squared error for the best pair (lambda,degree)
     """

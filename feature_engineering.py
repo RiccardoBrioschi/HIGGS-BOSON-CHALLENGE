@@ -16,16 +16,16 @@ def preprocessing(tx, y, ids, features):
     and adding trigonometric functions
     
     Args:
-        data: = array of shape (N,D) corresponding to feature matrix
-        y : = array of size (N,) containing outcomes
-        ids : = array of size (N, ) containing id for each row in tx
-        features: = array of size(D, ) containing names for each feature
+        data:  array of shape (N,D) corresponding to feature matrix
+        y :    array of size (N,) containing outcomes
+        ids :  array of size (N, ) containing id for each row in tx
+        features:  array of size(D,) containing names for each feature
     
     Returns:
-    list_subsets: =  list containing feature matrices for each subset obtained according to categorical variable PRI_jet_num
-    list_features: = list containing names of useful features for each subset
-    y_i : = outcomes for each subset
-    columns_to_drop_in_subset : list containing the indices of columns to remove in test dataset for each subset
+        list_subsets:   list containing feature matrices for each subset obtained according to categorical variable PRI_jet_num
+        list_features:  list containing names of useful features for each subset
+        y_i :           outcomes for each subset
+        columns_to_drop_in_subset : list containing the indices of columns to remove in test dataset for each subset
     """
 
     # Retrieving logical masks to divide the dataset

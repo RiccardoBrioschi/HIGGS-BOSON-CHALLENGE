@@ -6,7 +6,7 @@ from costs import *
 
 def compute_gradient_linear_regression(y, tx, w):
 
-    """Computes the gradient at w for linear regression.
+    """Compute the gradient at w for linear regression.
     Args:
         y: shape=(N, )
         tx: shape=(N,D)
@@ -36,7 +36,7 @@ def compute_stoch_gradient(y, tx, w):
 
 def compute_gradient_logistic_regression(y, tx, w):
 
-    """Computes the gradient at w for logistic regression (gradient of -log likelihood 
+    """Compute the gradient at w for logistic regression (gradient of -log likelihood 
        we want to minimize).
     Args:
         y: shape=(N, )
