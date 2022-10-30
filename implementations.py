@@ -73,7 +73,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 
 def least_squares(y, tx):
 
-    """ The least square algorithm or linear regression using normal equations.
+    """ The least squares algorithm for linear regression using normal equations.
     Args:
         y : shape = (N,)
         tx : shape = (N,D)
