@@ -73,11 +73,11 @@ def least_squares(y, tx):
     
     """ The least square algorithm or linear regression using normal equations.
     Args:
-    y : shape = (N,)
-    tx : shape = (N,D)
+        y : shape = (N,)
+        tx : shape = (N,D)
     Returns:
-    w : the optimal model parameters as numpy arrays of shape (D,)
-    loss: the loss value (scalar) for least squares"""
+        w : the optimal model parameters as numpy arrays of shape (D,)
+        loss: the loss value (scalar) for least squares"""
         
     A = np.dot(tx.T,tx)
     b = np.dot(tx.T,y)
