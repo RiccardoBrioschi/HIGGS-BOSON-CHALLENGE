@@ -64,9 +64,9 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """
     w = initial_w
     for n in range(max_iters):
-        for y_minibatch, tx_minibatch in batch_iter(y, tx, 1):
+        for y_minibatch, tx_minibatch in batch_iter(y, tx):
             stoch_grad = compute_stoch_gradient(y_minibatch, tx_minibatch, w)
-            w = w - gamma * stoch_grad
+        w = w - gamma * stoch_grad
     loss = compute_loss_linear_regression(y, tx, w)
     return w, loss
 
